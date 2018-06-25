@@ -13,7 +13,7 @@ function comicArrayLoad (){
   for (var i = 0; i < 15; i++) {
       possibleComics.push(i);
   }
-console.log(possibleComics);
+  console.log(possibleComics);
 }
 
 
