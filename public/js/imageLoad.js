@@ -32,7 +32,7 @@ function pickComic(){
 function load_a_random_group(){
   tempGroup = new THREE.Group();
   groupNo = pickComic();
-  getScript("/assets/scripts/"+groupNo);
+  // getScript("/assets/scripts/"+groupNo);
   console.log("Comic No. "+groupNo);
   geometry = new THREE.PlaneGeometry( 1, 1, 1 );
 

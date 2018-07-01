@@ -1,46 +1,45 @@
-var camera, controls, scene, renderer;
-var geometry, material, mesh, group;
+var camera, controls, scene, renderer, cameraOrtho, sceneOrtho;
+var geometry, material, mesh, group, sprite;
 
 init();
 animate();
 
 
 function init() {
+
   comicArrayLoad();
+
   var container = document.getElementById("theContainer");
-    camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 0.01, 10 );
-    camera.position.z = 1;
-
-    // controls = new THREE.TrackballControls( camera );
-		// 		controls.rotateSpeed = 1.0;
-		// 		controls.zoomSpeed = 1.2;
-		// 		controls.panSpeed = 0.8;
-		// 		controls.noZoom = false;
-		// 		controls.noPan = false;
-		// 		controls.staticMoving = false;
-		// 		controls.dynamicDampingFactor = 0.3;
-
-
-    scene = new THREE.Scene();
-
-    group = load_a_random_group()
-    scene.add( group );
-    console.log("GROUP:");
-    console.log(group);
-    renderer = new THREE.WebGLRenderer( { antialias: true } );
-    renderer.setSize( window.innerWidth*0.6, window.innerHeight*0.6 );
-
-
-    container.appendChild( renderer.domElement );
+  camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 0.01, 10 );
+  camera.position.z = 1;
 
 
 
-    window.addEventListener( 'resize', onWindowResize, false );
+  // var textureLoader = new THREE.TextureLoader();
+  // var mapA = textureLoader.load( "assets/phrases/joke.png", createHUDSprites );
+  scene = new THREE.Scene();
+
+  group = load_a_random_group()
+  scene.add( group );
+  hudSceneGen();
+  console.log(sceneOrtho);
+
+  renderer = new THREE.WebGLRenderer();
+  renderer.setPixelRatio( window.devicePixelRatio );
+  renderer.setSize( window.innerWidth, window.innerHeight );
+  renderer.autoClear = false;
+
+
+  container.appendChild( renderer.domElement );
 
 
 
-    container.addEventListener("mouseup", tapOrClick, false);
-    container.addEventListener("touchend", tap, false);
+  window.addEventListener( 'resize', onWindowResize, false );
+
+
+
+  container.addEventListener("mouseup", tapOrClick, false);
+  container.addEventListener("touchend", tap, false);
 }
 
 function onWindowResize() {
@@ -48,9 +47,14 @@ function onWindowResize() {
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
 
+  hudResize();
+
   renderer.setSize( window.innerWidth, window.innerHeight );
 
 }
+
+///HUD////
+
 
 /////////EVENTS////////////////////////
 
@@ -79,6 +83,13 @@ function animate() {
     // group.rotation.x += 0.01;
     // mesh.rotation.y += 0.02;
     // controls.update();
-    renderer.render( scene, camera );
+    render();
 
+}
+
+function render() {
+  renderer.clear();
+  renderer.render( scene, camera );
+  renderer.clearDepth();
+  renderer.render( sceneOrtho, cameraOrtho );
 }
