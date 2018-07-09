@@ -1,5 +1,39 @@
 
+
+
+
+
 let currentComic;
+
+
+
+var possibleComics = [];
+
+function comicArrayLoad (){
+
+  for (var i = 0; i < 21; i++) {
+      possibleComics.push(i);
+  }
+  console.log(possibleComics);
+}
+
+
+
+
+function load_a_random_group(){
+
+  var i = possibleComics.length
+  var theNumber = Math.floor(Math.random() * (i));
+  var loadedGroup = load_a_group(theNumber)
+  return loadedGroup;
+
+
+}
+
+
+
+
+
 
 function updateCurrentComic (update){
   currentComic = update;
@@ -7,7 +41,7 @@ function updateCurrentComic (update){
 
 
 
-var counter = 0;
+let counter = 0;
 
 
 function frameAdvance(){
@@ -30,24 +64,33 @@ if (counter>=4) {
 }
 
 //////////TIME TRAVEL!!!////////
+
+function time_travel(target){
+  var i = (currentComic+ target)%(possibleComics.length);
+  if (i<0){
+    i = 20 + i;
+  }
+  console.log(i);
+  scene.remove(comicGroup);
+  comicGroup = load_a_group(i);
+  scene.add( comicGroup );
+  console.log("Jumping to "+ currentComic);
+
+}
+
 function WB(){
-  console.log(currentComic);
+  time_travel(-(3+Math.ceil(Math.random()*2)));
 }
 
 function LB(){
-  var i = currentComic - 1;
-  console.log("LB");
-  load_a_group(i);
-
+  time_travel(-(Math.ceil(Math.random()*2)));
 }
 
 
 function LF(){
-  var i = currentComic + 1;
-  load_a_group(i);
-  console.log("LF");
+  time_travel((Math.ceil(Math.random()*2)));
 }
 
 function WF(){
-  console.log("WF");
+  time_travel(3+(Math.ceil(Math.random()*2)));
 }

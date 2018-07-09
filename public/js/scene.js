@@ -33,10 +33,10 @@ function init() {
   comicGroup = load_a_random_group();
   scene.add( comicGroup );
 
-	HUDgroup = new THREE.Group();
-	hudSceneGen();
-
-	scene.add( HUDgroup );
+	// HUDgroup = new THREE.Group();
+	// hudSceneGen();
+	//
+	// scene.add( HUDgroup );
 
 	console.log(HUDgroup);
 

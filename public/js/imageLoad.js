@@ -5,28 +5,7 @@
 
 
 
-var possibleComics = [];
 
-function comicArrayLoad (){
-
-  for (var i = 0; i < 21; i++) {
-      possibleComics.push(i);
-  }
-  console.log(possibleComics);
-}
-
-
-
-
-function load_a_random_group(){
-
-  var i = possibleComics.length
-  var theNumber = Math.floor(Math.random() * (i));
-  var loadedGroup = load_a_group(theNumber)
-  return loadedGroup;
-
-
-}
 
 function load_a_group(i){
   tempGroup = new THREE.Group();
@@ -39,6 +18,7 @@ function load_a_group(i){
   var loadi = 0;
   updateCurrentComic(i);
   imageLoad (groupNo, loadi);
+  counter = 0;
   return tempGroup;
 }
 
@@ -63,7 +43,7 @@ function imageLoad (groupNo, loadi){
        plane.position.y = 0;
        plane.position.z = 0;
        plane.name = "frame"+loadi;
-       console.log(loadi+" is loaded");
+       // console.log(loadi+" is loaded");
        tempGroup.add( plane );
 
        // if(loadi == 0){
