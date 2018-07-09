@@ -5,6 +5,15 @@
 
 // console.log(images);
 // console.log("LOADING!!!");
+// function pickComic(){
+//   var i = possibleComics.length
+//   var theNumber = Math.floor(Math.random() * (i));
+//   console.log("the number: "+theNumber);
+//   var thePick = possibleComics.splice(theNumber, 1)[0];
+//   console.log("randy: "+thePick);
+//   console.log(possibleComics);
+//   return thePick;
+// }
 
 var possibleComics = [];
 
@@ -18,22 +27,19 @@ function comicArrayLoad (){
 
 
 
-function pickComic(){
-  var i = possibleComics.length
-  var theNumber = Math.floor(Math.random() * (i));
-  console.log("the number: "+theNumber);
-  var thePick = possibleComics.splice(theNumber, 1)[0];
-  console.log("randy: "+thePick);
-  console.log(possibleComics);
-  return thePick;
+function load_a_random_group(){
+
+  ///PICK RANDO
+
+  var loadedGroup = load_a_group(i)
+  return loadedGroup
 }
 
-
-function load_a_random_group(){
+function load_a_group(i){
   tempGroup = new THREE.Group();
-  groupNo = pickComic();
+  groupNo = i;
   // getScript("/assets/scripts/"+groupNo);
-  console.log("Comic No. "+groupNo);
+
   geometry = new THREE.PlaneGeometry( 1, 1, 1 );
 
   loader = new THREE.TextureLoader();

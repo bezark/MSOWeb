@@ -4,16 +4,14 @@ var counter = 0;
 
 
 function frameAdvance(){
-  if (counter >= 3){
-  scene.remove(comicGroup);
-  comicGroup = load_a_random_group();
-  scene.add( comicGroup );
 
-  counter = -1;
-  }
-  counter ++;
-  precounter = counter - 1;
-  console.log(counter);
+precounter = counter;
+counter ++;
+if (counter>=4) {
+    counter = 0;
+}
+
+  
   var oldy = comicGroup.getObjectByName("frame"+precounter);
   var newey = comicGroup.getObjectByName("frame"+counter);
 
@@ -22,4 +20,22 @@ function frameAdvance(){
       new TWEEN.Tween( newey.material ).to( {
           opacity: 1.}, 250 ).start()
   });
+}
+
+//////////TIME TRAVEL!!!////////
+function WB(){
+  console.log("WB");
+}
+
+function LB(){
+  console.log("LB");
+}
+
+
+function LF(){
+  console.log("LF");
+}
+
+function WF(){
+  console.log("WF");
 }
