@@ -6,6 +6,8 @@ let comicGroup, HUDgroup;
 
 	var spriteTL, spriteTR, spriteBL, spriteBR, spriteC;
 
+
+
 init();
 animate();
 
@@ -28,7 +30,7 @@ function init() {
 
 
 
-  comicGroup = load_a_random_group()
+  comicGroup = load_a_random_group();
   scene.add( comicGroup );
 
 	HUDgroup = new THREE.Group();

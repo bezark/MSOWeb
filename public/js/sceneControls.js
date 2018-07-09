@@ -1,4 +1,11 @@
 
+let currentComic;
+
+function updateCurrentComic (update){
+  currentComic = update;
+}
+
+
 
 var counter = 0;
 
@@ -11,7 +18,7 @@ if (counter>=4) {
     counter = 0;
 }
 
-  
+
   var oldy = comicGroup.getObjectByName("frame"+precounter);
   var newey = comicGroup.getObjectByName("frame"+counter);
 
@@ -24,15 +31,20 @@ if (counter>=4) {
 
 //////////TIME TRAVEL!!!////////
 function WB(){
-  console.log("WB");
+  console.log(currentComic);
 }
 
 function LB(){
+  var i = currentComic - 1;
   console.log("LB");
+  load_a_group(i);
+
 }
 
 
 function LF(){
+  var i = currentComic + 1;
+  load_a_group(i);
   console.log("LF");
 }
 

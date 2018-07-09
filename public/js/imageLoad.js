@@ -3,17 +3,7 @@
 // req.send(null);
 // images = JSON.parse(req.responseText);
 
-// console.log(images);
-// console.log("LOADING!!!");
-// function pickComic(){
-//   var i = possibleComics.length
-//   var theNumber = Math.floor(Math.random() * (i));
-//   console.log("the number: "+theNumber);
-//   var thePick = possibleComics.splice(theNumber, 1)[0];
-//   console.log("randy: "+thePick);
-//   console.log(possibleComics);
-//   return thePick;
-// }
+
 
 var possibleComics = [];
 
@@ -27,12 +17,15 @@ function comicArrayLoad (){
 
 
 
+
 function load_a_random_group(){
 
-  ///PICK RANDO
+  var i = possibleComics.length
+  var theNumber = Math.floor(Math.random() * (i));
+  var loadedGroup = load_a_group(theNumber)
+  return loadedGroup;
 
-  var loadedGroup = load_a_group(i)
-  return loadedGroup
+
 }
 
 function load_a_group(i){
@@ -44,6 +37,7 @@ function load_a_group(i){
 
   loader = new THREE.TextureLoader();
   var loadi = 0;
+  updateCurrentComic(i);
   imageLoad (groupNo, loadi);
   return tempGroup;
 }
