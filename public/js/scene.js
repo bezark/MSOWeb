@@ -2,7 +2,7 @@
 var camera, scene, renderer, cameraOrtho, sceneOrtho;
 var geometry, material, mesh;
 
-let comicGroup, HUDgroup;
+let comicGroup, HUDgroup, timeline;
 
 	var spriteTL, spriteTR, spriteBL, spriteBR, spriteC;
 
@@ -32,7 +32,9 @@ function init() {
 
   comicGroup = load_a_random_group();
   scene.add( comicGroup );
-
+	timeline = load_timeline(currentComic);
+	scene.add( timeline );
+	expand ()
 	// HUDgroup = new THREE.Group();
 	// hudSceneGen();
 	//
