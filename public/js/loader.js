@@ -2,6 +2,10 @@ var req = new XMLHttpRequest();
 req.open("GET","data/comicStructure.json", false);
 req.send(null);
 comicStructure = JSON.parse(req.responseText);
+phraseStructure = comicStructure.phrases
+
+
+
 
 console.log("comicStructure:");
 console.log(comicStructure);
@@ -63,6 +67,65 @@ function timelineImageLoad (loadi){
     });
 }
 
+function phraseGroupsGen(){
+  for (var phrase in phraseHopGroups) {
+    phraseHopGroups[phrase]=  new THREE.Group();
+    scene.add(phraseHopGroups[phrase]);
+    phraseHopGroups[phrase].visible = false;
+
+    for (var comic in phraseStructure[phrase]) {
+      phraseGroupImageLoad(comic, phraseStructure[phrase][comic].panel, phraseHopGroups[phrase])
+
+      }
+    }
+  }
+
+
+
+
+function phraseGroupImageLoad (comic, frame, group){
+    console.log("assets/testImages/"+comic+"/"+frame+".png",);
+   loader.load(
+    // resource URL
+
+    "assets/testImages/"+comic+"/"+frame+".png",
+    // Function when resource is loaded
+    function ( texture ) {
+      // if(loadi == 0){theOpac = 1.}else{theOpac = 0.};
+       material = new THREE.MeshBasicMaterial( {
+        map: texture,
+        transparent: true,
+        opacity: 1. //theOpac
+
+       } );
+
+       var plane = new THREE.Mesh( geometry, material );
+       plane.position.x = 0;
+       plane.position.y = 0;
+       plane.position.z = 0;
+       // plane.name = "TimeLine"+loadi;
+
+       group.add( plane );
+
+
+
+
+    },
+    // Function called when download progresses
+    function ( xhr ) {
+      console.log( (xhr.loaded / xhr.total * 100) + '% loaded' );
+    },
+    // Function called when download errors
+    function ( xhr ) {
+      console.log( 'An error happened' );
+    });
+}
+
+
+
+
+
+
 
 function load_a_group(i){
   tempGroup = new THREE.Group();
@@ -75,6 +138,8 @@ function load_a_group(i){
   updateCurrentComic(i);
   imageLoad (groupNo, loadi);
   counter = 0;
+  phraseCheck (currentComic, counter);
+
   tempGroup.visible = false;
   return tempGroup;
 }

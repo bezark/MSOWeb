@@ -11,14 +11,16 @@ function tapOrClick(event) {
   event.stopPropagation();
   event.preventDefault();
 
-
-    frameAdvance();
+  if(selectedObjects.length>0){
+    phraseHop(selectedObjects[0].name);
+    // phraseGroup.getObjectByName(selectedObjects[0].name).visible = false
+  }else{frameAdvance();}
 
  }
 
 
 
- function onTouchMove( event ) {
+function onTouchMove( event ) {
 
    var x, y;
 
@@ -41,12 +43,12 @@ function tapOrClick(event) {
 
  }
 
- function addSelectedObject(object) {
+function addSelectedObject(object) {
    selectedObjects = [];
-   selectedObjects.push(object);
+   selectedObjects.push(  object);
  }
 
- function checkIntersection() {
+function checkIntersection() {
 
    raycaster.setFromCamera( mouse, camera );
 
@@ -55,11 +57,11 @@ function tapOrClick(event) {
    if ( intersects.length > 0 ) {
 
      var selectedObject = intersects[ 0 ].object;
-     console.log(comicStructure.phrases[selectedObject.name]);
      addSelectedObject(selectedObject);
      outlinePass.selectedObjects = selectedObjects;
    }
    else {
-     outlinePass.selectedObjects = [];
+     selectedObjects = [];
+     outlinePass.selectedObjects = selectedObjects;
    }
  }

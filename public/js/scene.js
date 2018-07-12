@@ -33,22 +33,26 @@ function init() {
 
   comicArrayLoad();
 
-
+	phraseSpriteGen();
+	scene.add( phraseGroup );
 
   comicGroup = load_a_random_group();
   scene.add( comicGroup );
+
+	phraseGroupsGen();
+
 	timeline = load_timeline(currentComic);
 	scene.add( timeline );
+
 	expand ()
 
 
-	phraseSpriteGen();
-	scene.add( phraseGroup );
+
 	// HUDgroup = new THREE.Group();
 	// hudSceneGen();
 	//
 	// scene.add( HUDgroup );
-console.log("PHRASE GROUP:");
+	console.log("PHRASE GROUP:");
 	console.log(phraseGroup);
 
   renderer = new THREE.WebGLRenderer();
