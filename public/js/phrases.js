@@ -48,10 +48,14 @@ function notCurrentComic(comic) {
 
 function phraseHop (selectedPhrase){
   phraseHopGroups[selectedPhrase].visible = true;
-  timeline.visible = false;
-  comicGroup.visible = false;
+  // timeline.visible = false;
+  // comicGroup.visible = false;
   new TWEEN.Tween( phraseHopGroups[selectedPhrase].rotation ).to( {
     y: 0.7853982}, 500 ).start()
+  new TWEEN.Tween( timeline.opacity ).to( {
+  0.}, 500 ).start()
+    new TWEEN.Tween( comicGroup.rotation ).to( {
+      y: 0.7853982}, 500 ).start()
 
 
     var comicsToTraverse = phraseHopGroups[selectedPhrase].children.filter(notCurrentComic);
