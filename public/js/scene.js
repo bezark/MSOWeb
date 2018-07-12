@@ -1,10 +1,15 @@
 
-var camera, scene, renderer, cameraOrtho, sceneOrtho;
-var geometry, material, mesh;
+let camera, scene, renderer, cameraOrtho, sceneOrtho;
+let geometry, material, mesh;
 
 let comicGroup, HUDgroup, timeline, phraseGroup;
 
+let raycaster = new THREE.Raycaster();
 
+let mouse = new THREE.Vector2();
+let selectedObjects = [];
+
+let composer, effectFXAA, outlinePass;
 
 
 
@@ -36,7 +41,6 @@ function init() {
 	scene.add( timeline );
 	expand ()
 
-	phraseGroup = new THREE.Group();
 
 	phraseSpriteGen();
 	scene.add( phraseGroup );
@@ -44,13 +48,16 @@ function init() {
 	// hudSceneGen();
 	//
 	// scene.add( HUDgroup );
-
+console.log("PHRASE GROUP:");
 	console.log(phraseGroup);
 
   renderer = new THREE.WebGLRenderer();
   renderer.setPixelRatio( window.devicePixelRatio );
   renderer.setSize( window.innerWidth, window.innerHeight );
-  renderer.autoClear = false;
+	renderer.shadowMap.enabled = true;
+	renderer.setClearColor( 0xa0a0a0 );
+
+	postInit();
 
 var container = document.getElementById("theContainer");
 
@@ -62,7 +69,12 @@ var container = document.getElementById("theContainer");
 
   container.addEventListener("mouseup", tapOrClick, false);
   container.addEventListener("touchend", tap, false);
-}
+
+	container.addEventListener( 'mousemove', onTouchMove );
+  container.addEventListener( 'touchmove', onTouchMove );
+
+
+}  ////END O INIT
 
 function onWindowResize() {
 
@@ -72,6 +84,8 @@ function onWindowResize() {
 	updateHUDSprites();
 
   renderer.setSize( window.innerWidth, window.innerHeight );
+	composer.setSize(window.innerWidth, window.innerHeight ); // width, height ); ????????
+	effectFXAA.uniforms['resolution'].value.set(1 / window.innerWidth, 1 / window.innerHeight );
 
 }
 
@@ -83,26 +97,7 @@ function onWindowResize() {
 
 
 
-
-/////////EVENTS////////////////////////
-
-function tap(event){
-   event.stopPropagation();
-   event.preventDefault();
-  console.log("taped");
-  tapOrClick(event);
-}
-
-function tapOrClick(event) {
-  event.stopPropagation();
-  event.preventDefault();
-
-
-    frameAdvance();
-
- }
-
-
+///////////////
 
 function animate() {
 
@@ -114,8 +109,10 @@ function animate() {
 }
 
 function render() {
-  renderer.clear();
-  renderer.render( scene, camera );
-  renderer.clearDepth();
+	renderer.autoClear = true;
+	renderer.setClearColor( 0xfff0f0 );
+	renderer.setClearAlpha( 0.0 );
+	composer.render();
+  // renderer.clearDepth();
   // renderer.render( sceneOrtho, cameraOrtho );
 }

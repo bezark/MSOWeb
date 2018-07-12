@@ -6,7 +6,7 @@ comicStructure = JSON.parse(req.responseText);
 console.log("comicStructure:");
 console.log(comicStructure);
 
-  loader = new THREE.TextureLoader();
+loader = new THREE.TextureLoader();
 
 
 function load_timeline(offset){
