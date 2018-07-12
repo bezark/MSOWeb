@@ -2,9 +2,9 @@
 var camera, scene, renderer, cameraOrtho, sceneOrtho;
 var geometry, material, mesh;
 
-let comicGroup, HUDgroup, timeline;
+let comicGroup, HUDgroup, timeline, phraseGroup;
 
-	var spriteTL, spriteTR, spriteBL, spriteBR, spriteC;
+
 
 
 
@@ -35,12 +35,17 @@ function init() {
 	timeline = load_timeline(currentComic);
 	scene.add( timeline );
 	expand ()
+
+	phraseGroup = new THREE.Group();
+
+	phraseSpriteGen();
+	scene.add( phraseGroup );
 	// HUDgroup = new THREE.Group();
 	// hudSceneGen();
 	//
 	// scene.add( HUDgroup );
 
-	console.log(HUDgroup);
+	console.log(phraseGroup);
 
   renderer = new THREE.WebGLRenderer();
   renderer.setPixelRatio( window.devicePixelRatio );

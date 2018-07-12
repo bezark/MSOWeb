@@ -1,32 +1,55 @@
-
+let phrases = ["then","remember","saying","where","joke"];
 
 
 var width = window.innerWidth;
 var height = window.innerHeight;
 
 
+function phraseSpriteGen(){
 
+  phraseGroup.name = "phraseSprites"
+
+
+for (var i = 0; i < phrases.length; i++) {
+  var spriteMap = new THREE.TextureLoader().load( "assets/phrases/"+phrases[i]+".png" );
+  var spriteMaterial = new THREE.SpriteMaterial( { map: spriteMap, color: 0xffffff } );
+  var sprite = new THREE.Sprite( spriteMaterial );
+  sprite.scale.set( 0.5, 0.5, 1 );
+  sprite.name = phrases[i];
+  sprite.position.set( i*0.4-1., i*-0.2+ 0.5, 0 ); // center
+
+  phraseGroup.add( sprite );
+}
+
+
+  updateHUDSprites();
+
+  	// var textureLoader = new THREE.TextureLoader();
+  	//
+  	// var mapA = textureLoader.load( "assets/phrases/sprite0.png", createHUDSprites );
+
+
+}
 
 function hudSceneGen(){
 
-HUDgroup.name = "HUDsprites"
+  HUDgroup.name = "HUDsprites"
 
 
 
+  var spriteMap = new THREE.TextureLoader().load( "assets/phrases/joke.png" );
+  var spriteMaterial = new THREE.SpriteMaterial( { map: spriteMap, color: 0xffffff } );
+  var sprite = new THREE.Sprite( spriteMaterial );
+  sprite.scale.set( 0.5, 0.5, 1 );
+  sprite.position.set( 0., -0.75, 0 ); // center
 
-var spriteMap = new THREE.TextureLoader().load( "assets/phrases/joke.png" );
-var spriteMaterial = new THREE.SpriteMaterial( { map: spriteMap, color: 0xffffff } );
-var sprite = new THREE.Sprite( spriteMaterial );
-sprite.scale.set( 0.5, 0.5, 1 );
-sprite.position.set( 0., -0.75, 0 ); // center
+  HUDgroup.add( sprite );
 
-HUDgroup.add( sprite );
+  updateHUDSprites();
 
-updateHUDSprites();
-
-	// var textureLoader = new THREE.TextureLoader();
-	//
-	// var mapA = textureLoader.load( "assets/phrases/sprite0.png", createHUDSprites );
+  	// var textureLoader = new THREE.TextureLoader();
+  	//
+  	// var mapA = textureLoader.load( "assets/phrases/sprite0.png", createHUDSprites );
 
 
 }

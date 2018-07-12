@@ -1,7 +1,10 @@
-// var req = new XMLHttpRequest();
-// req.open("GET","data/images.json", false);
-// req.send(null);
-// images = JSON.parse(req.responseText);
+var req = new XMLHttpRequest();
+req.open("GET","data/comicStructure.json", false);
+req.send(null);
+comicStructure = JSON.parse(req.responseText);
+
+console.log("comicStructure:");
+console.log(comicStructure);
 
   loader = new THREE.TextureLoader();
 
