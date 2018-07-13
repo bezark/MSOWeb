@@ -76,8 +76,8 @@ function frameAdvance(){
   }
     phraseCheck (currentComic, counter);
 
-    var oldy = comicGroup.getObjectByName("frame"+precounter);
-    var newey = comicGroup.getObjectByName("frame"+counter);
+    // var oldy = comicGroup.getObjectByName("frame"+precounter);
+    // var newey = comicGroup.getObjectByName("frame"+counter);
 
     new TWEEN.Tween( comicGroup.position ).to( {
       y: (counter*1.05)}, 250 ).start()
@@ -125,6 +125,21 @@ function expand (){
 }
 
 //////////TIME TRAVEL!!!////////
+
+function time_warp(comic, frame){
+  console.log("warping to "+comic, frame);
+  tempTimeline.position.x = comic*-1.05
+
+  comicGroup = load_a_group(comic);
+  timeline.children[currentComic].visible = false;
+  scene.add( comicGroup );
+  timeline.visible = true;
+  comicGroup.visible = true;
+  counter = frame-1;
+  expand();
+  frameAdvance();
+  comicGroup.position.y = frame*-1.05;
+}
 
 function time_travel(target){
   var i = (currentComic+ target)%(possibleComics.length);

@@ -48,17 +48,24 @@ function notCurrentComic(comic) {
 
 function phraseHop (selectedPhrase){
   phraseHopGroups[selectedPhrase].visible = true;
-  // timeline.visible = false;
-  // comicGroup.visible = false;
-  new TWEEN.Tween( phraseHopGroups[selectedPhrase].rotation ).to( {
-    y: 0.7853982}, 500 ).start()
-  new TWEEN.Tween( timeline.opacity ).to( {
-  0.}, 500 ).start()
-    new TWEEN.Tween( comicGroup.rotation ).to( {
-      y: 0.7853982}, 500 ).start()
+  timeline.visible = false;
+  comicGroup.visible = false;
+  // camera.lookAt={y: 0., x: 0., z:0. };
+
+
+  // new TWEEN.Tween( timeline.material ).to( {
+  // // opacity: 0.}, 500 ).start()
+  // //   new TWEEN.Tween( comicGroup.material ).to( {
+  // //   opacity: 0.}, 500 ).start()
 
 
     var comicsToTraverse = phraseHopGroups[selectedPhrase].children.filter(notCurrentComic);
+
+    var theJump = Math.ceil((Math.random()*(comicsToTraverse.length)));
+    theJump--;
+
+    if(theJump ==0){theJump=1;}
+
   for (var i = 0; i < comicsToTraverse.length; i++) {
     new TWEEN.Tween( comicsToTraverse[i].position ).to( {
       z: i * -0.75}, 250 ).start()
@@ -66,7 +73,26 @@ function phraseHop (selectedPhrase){
 
 
       new TWEEN.Tween( camera.position ).to( {
-        z: 2.}, 500 ).start()
+        z: 2., x: -1.75 }, 500 ).start().onComplete(function(){
+          new TWEEN.Tween( phraseHopGroups[selectedPhrase].position ).to( {
+            z: theJump* 0.75}, 500 ).start().onComplete(function() {
+              new TWEEN.Tween( camera.position ).to( {
+                z: 1., x: 0 }, 500 ).start().onComplete(function(){
+                time_warp(comicsToTraverse[theJump].comic, comicsToTraverse[theJump].frame);
+              
+                phraseHopGroups[selectedPhrase].visible = false;
+
+              });
+
+            });
+        });
+
+    //     new TWEEN.Tween( controls.lookAt ).to( {
+    // x: 0.,
+    // y: 0.,
+    // z: 0.}, 500 )
+      // new TWEEN.Tween( camera.target ).to( {
+      //   y: 0., x: 0., z:0. }, 500 ).start()
 
 
 

@@ -1,5 +1,5 @@
 
-let camera, scene, renderer, cameraOrtho, sceneOrtho;
+let camera, scene, renderer, controls, cameraOrtho, sceneOrtho;
 let geometry, material, mesh;
 
 let comicGroup, HUDgroup, timeline, phraseGroup;
@@ -28,7 +28,7 @@ function init() {
 
   scene = new THREE.Scene();
 
-
+	controls = new THREE.TrackballControls( camera );
 
 
   comicArrayLoad();
@@ -107,7 +107,7 @@ function animate() {
 
     requestAnimationFrame( animate );
   	TWEEN.update();
-
+			controls.update();
     render();
 
 }

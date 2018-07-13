@@ -90,7 +90,7 @@ function phraseGroupImageLoad (comic, frame, group){
 
     "assets/testImages/"+comic+"/"+frame+".png",
     // Function when resource is loaded
-    function ( texture ) {
+    function ( texture) {
       // if(loadi == 0){theOpac = 1.}else{theOpac = 0.};
        material = new THREE.MeshBasicMaterial( {
         map: texture,
@@ -103,7 +103,8 @@ function phraseGroupImageLoad (comic, frame, group){
        plane.position.x = 0;
        plane.position.y = 0;
        plane.position.z = 0;
-       // plane.name = "TimeLine"+loadi;
+       plane.comic = comic;
+       plane.frame = frame;
 
        group.add( plane );
 

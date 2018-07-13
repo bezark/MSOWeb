@@ -420,36 +420,36 @@ THREE.TrackballControls = function ( object, domElement ) {
 
 		}
 
-		document.addEventListener( 'mousemove', mousemove, false );
-		document.addEventListener( 'mouseup', mouseup, false );
+		// document.addEventListener( 'mousemove', mousemove, false );
+		// document.addEventListener( 'mouseup', mouseup, false );
 
 		_this.dispatchEvent( startEvent );
 
 	}
 
-	function mousemove( event ) {
-
-		if ( _this.enabled === false ) return;
-
-		event.preventDefault();
-		event.stopPropagation();
-
-		if ( _state === STATE.ROTATE && ! _this.noRotate ) {
-
-			_movePrev.copy( _moveCurr );
-			_moveCurr.copy( getMouseOnCircle( event.pageX, event.pageY ) );
-
-		} else if ( _state === STATE.ZOOM && ! _this.noZoom ) {
-
-			_zoomEnd.copy( getMouseOnScreen( event.pageX, event.pageY ) );
-
-		} else if ( _state === STATE.PAN && ! _this.noPan ) {
-
-			_panEnd.copy( getMouseOnScreen( event.pageX, event.pageY ) );
-
-		}
-
-	}
+	// function mousemove( event ) {
+	//
+	// 	if ( _this.enabled === false ) return;
+	//
+	// 	event.preventDefault();
+	// 	event.stopPropagation();
+	//
+	// 	if ( _state === STATE.ROTATE && ! _this.noRotate ) {
+	//
+	// 		_movePrev.copy( _moveCurr );
+	// 		_moveCurr.copy( getMouseOnCircle( event.pageX, event.pageY ) );
+	//
+	// 	} else if ( _state === STATE.ZOOM && ! _this.noZoom ) {
+	//
+	// 		_zoomEnd.copy( getMouseOnScreen( event.pageX, event.pageY ) );
+	//
+	// 	} else if ( _state === STATE.PAN && ! _this.noPan ) {
+	//
+	// 		_panEnd.copy( getMouseOnScreen( event.pageX, event.pageY ) );
+	//
+	// 	}
+	//
+	// }
 
 	function mouseup( event ) {
 
