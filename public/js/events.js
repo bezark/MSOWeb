@@ -1,5 +1,5 @@
 /////////EVENTS////////////////////////
-
+var clicks = 0;
 function tap(event){
    event.stopPropagation();
    event.preventDefault();
@@ -11,10 +11,23 @@ function tapOrClick(event) {
   event.stopPropagation();
   event.preventDefault();
 
-  if(selectedObjects.length>0){
-    phraseHop(selectedObjects[0].name);
-    // phraseGroup.getObjectByName(selectedObjects[0].name).visible = false
-  }else{frameAdvance();}
+  // if(selectedObjects.length>0){
+  //   phraseHop(selectedObjects[0].name);
+  //   // phraseGroup.getObjectByName(selectedObjects[0].name).visible = false
+  // }else{;}
+  frameAdvance()
+
+
+  // clicks ++;
+  // new TWEEN.Tween( timeline.rotation ).to( {
+  //   z: -theta*(clicks*1)}, 250 ).easing(TWEEN.Easing.Bounce.Out).start()
+
+
+
+
+
+
+
 
  }
 
@@ -50,9 +63,9 @@ function addSelectedObject(object) {
 
 function checkIntersection() {
 
-   raycaster.setFromCamera( mouse, camera );
+   raycaster.setFromCamera( mouse, timelineCamera );
 
-   var intersects = raycaster.intersectObjects( [ phraseGroup ], true );
+   var intersects = raycaster.intersectObjects( [ timeline ], true );
 
    if ( intersects.length > 0 ) {
 

@@ -48,7 +48,7 @@ function notCurrentComic(comic) {
 
 function phraseHop (selectedPhrase){
   phraseHopGroups[selectedPhrase].visible = true;
-  timeline.visible = false;
+  // timeline.visible = false;
   comicGroup.visible = false;
   // camera.lookAt={y: 0., x: 0., z:0. };
 
@@ -72,14 +72,14 @@ function phraseHop (selectedPhrase){
   }
 
 
-      new TWEEN.Tween( camera.position ).to( {
+      new TWEEN.Tween( comicCamera.position ).to( {
         z: 2., x: -1.75 }, 500 ).start().onComplete(function(){
           new TWEEN.Tween( phraseHopGroups[selectedPhrase].position ).to( {
             z: theJump* 0.75}, 500 ).start().onComplete(function() {
-              new TWEEN.Tween( camera.position ).to( {
+              new TWEEN.Tween( comicCamera.position ).to( {
                 z: 1., x: 0 }, 500 ).start().onComplete(function(){
                 time_warp(comicsToTraverse[theJump].comic, comicsToTraverse[theJump].frame);
-              
+
                 phraseHopGroups[selectedPhrase].visible = false;
 
               });

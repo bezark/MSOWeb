@@ -1,8 +1,8 @@
 
-let camera, scene, renderer, controls, cameraOrtho, sceneOrtho;
-let geometry, material, mesh;
+let camera, ComicScene, TimeLineScene, renderer
+let geometry, material, mesh, comicTarget;
 
-let comicGroup, HUDgroup, timeline, phraseGroup;
+let comicGroup, timeline, phraseGroup;
 
 let raycaster = new THREE.Raycaster();
 
@@ -23,43 +23,49 @@ function init() {
   var height = window.innerHeight;
 
 
-  camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 0.01, 10 );
-  camera.position.z = 1;
+  comicCamera = new THREE.PerspectiveCamera( 70, 1, 0.01, 10 );
+  comicCamera.position.z = 1;
 
-  scene = new THREE.Scene();
+  timelineCamera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 0.01, 10 );
+  timelineCamera.position.z = 1;
 
-	controls = new THREE.TrackballControls( camera );
+  TimeLineScene = new THREE.Scene();
+  ComicScene = new THREE.Scene();
 
+	controls = new THREE.TrackballControls( comicCamera );
 
-  comicArrayLoad();
+  comicTarget = new THREE.WebGLRenderTarget( 1024, 1024, { format: THREE.RGBFormat } );
+  comicTarget.name = "comicTarget";
 
-	phraseSpriteGen();
-	scene.add( phraseGroup );
-
-  comicGroup = load_a_random_group();
-  scene.add( comicGroup );
-
-	phraseGroupsGen();
-
-	timeline = load_timeline(currentComic);
-	scene.add( timeline );
-
-	expand ()
-
-
-
-	// HUDgroup = new THREE.Group();
-	// hudSceneGen();
-	//
-	// scene.add( HUDgroup );
-	console.log("PHRASE GROUP:");
-	console.log(phraseGroup);
 
   renderer = new THREE.WebGLRenderer();
   renderer.setPixelRatio( window.devicePixelRatio );
   renderer.setSize( window.innerWidth, window.innerHeight );
 	renderer.shadowMap.enabled = true;
-	renderer.setClearColor( 0xa0a0a0 );
+
+
+  comicArrayLoad();
+
+	phraseSpriteGen();
+	ComicScene.add( phraseGroup );
+	phraseGroupsGen();
+
+
+  loadAllComics()
+
+
+
+	timeline = load_timeline();
+	TimeLineScene.add( timeline );
+
+	// expand ()
+
+
+
+
+
+
+
 
 	postInit();
 
@@ -82,8 +88,8 @@ var container = document.getElementById("theContainer");
 
 function onWindowResize() {
 
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
+  timelineCamera.aspect = window.innerWidth / window.innerHeight;
+  timelineCamera.updateProjectionMatrix();
 
 	updateHUDSprites();
 
@@ -107,16 +113,19 @@ function animate() {
 
     requestAnimationFrame( animate );
   	TWEEN.update();
-			controls.update();
+			// controls.update();
     render();
 
 }
 
 function render() {
 	renderer.autoClear = true;
+	renderer.setClearColor( 0xa0a0a0 );
+	renderer.render( ComicScene, comicCamera, comicTarget, true );
 	renderer.setClearColor( 0xfff0f0 );
-	renderer.setClearAlpha( 0.0 );
-	composer.render();
+  renderer.render( TimeLineScene, timelineCamera );
+	// renderer.setClearAlpha( 0.0 );
+	//  CLEAN UP COMPOSER BEFORE ADDING THIS BACK IN. FIX CLIPPING ISSUE composer.render();
   // renderer.clearDepth();
   // renderer.render( sceneOrtho, cameraOrtho );
 }

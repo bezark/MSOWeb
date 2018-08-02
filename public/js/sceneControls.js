@@ -3,10 +3,10 @@
 
 
 
-let currentComic;
-
-
-
+let currentComic, currentComicGroup;
+let circOffset = 0;
+let spun = 0;
+let oldTexture;
 var possibleComics = [];
 
 function comicArrayLoad (){
@@ -39,15 +39,15 @@ function phraseCheck(comic, frame){
     if (phraseStructure[phrase].hasOwnProperty(comic)) {
 
       if(phraseStructure[phrase][comic].panel == frame){
-          console.log(frame, comic);
+          // console.log(frame, comic);
           phraseGroup.getObjectByName(phrase).visible = true;
           new TWEEN.Tween( phraseGroup.getObjectByName(phrase).position ).to( {
-            y: (0)}, 250 ).start()
+            x: (0)}, 250 ).start()
         }else{ /////PROBAVLY REDUNDANT
-          phraseGroup.getObjectByName(phrase).position.set( 0, -1., 0 )
+          phraseGroup.getObjectByName(phrase).position.set( 1., 0., 0 )
           phraseGroup.getObjectByName(phrase).visible = false;
       }}else{
-        phraseGroup.getObjectByName(phrase).position.set( 0, -1., 0 )
+        phraseGroup.getObjectByName(phrase).position.set( 1., 0., 0 )
         phraseGroup.getObjectByName(phrase).visible = false;
 
     }
@@ -60,6 +60,8 @@ function phraseCheck(comic, frame){
 
 function updateCurrentComic (update){
   currentComic = update;
+  currentComicGroup = ComicScene.getObjectByName("comicGroup"+currentComic);
+
 }
 
 
@@ -79,8 +81,8 @@ function frameAdvance(){
     // var oldy = comicGroup.getObjectByName("frame"+precounter);
     // var newey = comicGroup.getObjectByName("frame"+counter);
 
-    new TWEEN.Tween( comicGroup.position ).to( {
-      y: (counter*1.05)}, 250 ).start()
+    new TWEEN.Tween( currentComicGroup.position ).to( {
+      x: (counter*-1.05)}, 250 ).start()
     // new TWEEN.Tween( oldy.material ).to( {
     //   opacity: 0.}, 250 ).start().onComplete(function() {
     //     new TWEEN.Tween( newey.material ).to( {
@@ -88,41 +90,45 @@ function frameAdvance(){
     // });
 }
 
-function collapse (target){
-  phraseGroup.visible = false;
-  for (var i = 0; i < comicGroup.children.length; i++) {
-    new TWEEN.Tween( comicGroup.children[i].position ).to( {
-      y: 0}, 250 ).start()
-  }
-  new TWEEN.Tween( comicGroup.position ).to( {
-    y: 0}, 250 ).start().onComplete(function() {
-      timeline.children[currentComic].visible = true;
-        time_travel(target)
-    });
-
-    new TWEEN.Tween( camera.position ).to( {
-      z: 2.}, 500 ).start()
-
-}
-
-function expand (){
-
-  new TWEEN.Tween( comicGroup.position ).to( {
-    y: 0}, 250 ).start().onComplete(function() {
-      timeline.children[currentComic].visible = false;
-      comicGroup.visible = true;
-      phraseGroup.visible = true;
-      for (var i = 0; i < comicGroup.children.length; i++) {
-        new TWEEN.Tween( comicGroup.children[i].position ).to( {
-          y: i * -1.05}, 250 ).start()
-      }
-    });
 
 
-    new TWEEN.Tween( camera.position ).to( {
-      z: 1.}, 500 ).start()
 
-}
+//
+// function collapse (target){
+//   phraseGroup.visible = false;
+//   for (var i = 0; i < comicGroup.children.length; i++) {
+//     new TWEEN.Tween( comicGroup.children[i].position ).to( {
+//       y: 0}, 250 ).start()
+//   }
+//   new TWEEN.Tween( comicGroup.position ).to( {
+//     y: 0}, 250 ).start().onComplete(function() {
+//       timeline.children[currentComic].visible = true;
+//         time_travel(target)
+//     });
+//
+//     new TWEEN.Tween( timelineCamera.position ).to( {
+//       z: 2.}, 500 ).start()
+//
+// }
+//
+// function expand (){
+//
+//   new TWEEN.Tween( comicGroup.position ).to( {
+//     y: 0}, 250 ).start().onComplete(function() {
+//       timeline.children[currentComic].visible = false;
+//       comicGroup.visible = true;
+//       phraseGroup.visible = true;
+//       for (var i = 0; i < comicGroup.children.length; i++) {
+//         new TWEEN.Tween( comicGroup.children[i].position ).to( {
+//           y: i * -1.05}, 250 ).start()
+//       }
+//     });
+//
+//
+//     new TWEEN.Tween( timelineCamera.position ).to( {
+//       z: 1.}, 500 ).start()
+//
+// }
 
 //////////TIME TRAVEL!!!////////
 
@@ -131,10 +137,10 @@ function time_warp(comic, frame){
   tempTimeline.position.x = comic*-1.05
 
   comicGroup = load_a_group(comic);
-  timeline.children[currentComic].visible = false;
+
   scene.add( comicGroup );
-  timeline.visible = true;
-  comicGroup.visible = true;
+
+
   counter = frame-1;
   expand();
   frameAdvance();
@@ -142,39 +148,83 @@ function time_warp(comic, frame){
 }
 
 function time_travel(target){
-  var i = (currentComic+ target)%(possibleComics.length);
-  if (i<0){
-    i = 20 + i;
+
+  //// TEXUTRE SWAP
+  circOffset = (circOffset+ target);
+  var comicName = circOffset%(possibleComics.length);
+  if (comicName<0){
+    comicName =21+comicName;
   }
-  console.log(i);
-  scene.remove(comicGroup);
-  new TWEEN.Tween( tempTimeline.position ).to( {
-    x : i*-1.05}, 2000 ).start().onComplete(function() {
-      comicGroup = load_a_group(i);
-      scene.add( comicGroup );
-      expand()
+
+
+  var oldPlaneToChange = timeline.getObjectByName("TimeLine"+currentComic)
+
+  if (spun){
+    oldPlaneToChange.material.map = oldTexture;
+    currentComicGroup.visible = false;
+  }
+
+  spun = 1;
+
+  updateCurrentComic(comicName);
+  console.log("currentComicGroup:");
+  console.log(currentComicGroup);
+  currentComicGroup.visible = true;
+
+
+
+  planeToChange = timeline.getObjectByName("TimeLine"+comicName);
+
+  oldTexture = planeToChange.material.map;
+  planeToChange.material.map = comicTarget.texture;
+  phraseCheck (currentComic, 0);
+
+
+
+
+  new TWEEN.Tween( tempTimeline.rotation ).to( {
+    z: theta*circOffset}, 2000 ).easing(TWEEN.Easing.Bounce.Out).start().onComplete(function() {
+      // comicGroup = load_a_group(i);
+      // scene.add( comicGroup );
+      // expand()
+
+
+
+
+
+
+
+
+
+
+
     });
 
-  comicGroup = load_a_group(i);
-  scene.add( comicGroup );
-  console.log("Jumping to "+ currentComic);
+  // comicGroup = load_a_group(i);
+  // scene.add( comicGroup );
+
 
 }
 
+
+
+
+
+
 function WB(){
-  collapse(-(3+Math.ceil(Math.random()*2)));
+  time_travel(-(3+Math.ceil(Math.random()*2)));
   //time_travel();
 }
 
 function LB(){
-  collapse(-(Math.ceil(Math.random()*2)));
+  time_travel(-(Math.ceil(Math.random()*2)));
 }
 
 
 function LF(){
-  collapse((Math.ceil(Math.random()*2)));
+  time_travel((Math.ceil(Math.random()*2)));
 }
 
 function WF(){
-  collapse(3+(Math.ceil(Math.random()*2)));
+  time_travel(3+(Math.ceil(Math.random()*2)));
 }

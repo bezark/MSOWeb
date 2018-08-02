@@ -12,10 +12,10 @@ function postInit (){
 
       composer = new THREE.EffectComposer( renderer );
 
-      var renderPass = new THREE.RenderPass( scene, camera );
+      var renderPass = new THREE.RenderPass( TimeLineScene, timelineCamera );
       composer.addPass( renderPass );
 
-      outlinePass = new THREE.OutlinePass( new THREE.Vector2(window.innerWidth, window.innerHeight), scene, camera);
+      outlinePass = new THREE.OutlinePass( new THREE.Vector2(window.innerWidth, window.innerHeight), TimeLineScene, timelineCamera);
       composer.addPass( outlinePass );
 
 
