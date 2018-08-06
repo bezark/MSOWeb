@@ -79,7 +79,7 @@ function phraseHop (selectedPhrase){
               new TWEEN.Tween( camera.position ).to( {
                 z: 1., x: 0 }, 500 ).start().onComplete(function(){
                 time_warp(comicsToTraverse[theJump].comic, comicsToTraverse[theJump].frame);
-              
+                
                 phraseHopGroups[selectedPhrase].visible = false;
 
               });
