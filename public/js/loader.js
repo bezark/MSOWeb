@@ -104,11 +104,41 @@ function timelineImageLoad (loadi){
 
 
 ///////PHRASES//////////
+
+function phraseSpriteGen(){
+
+	phraseGroup = new THREE.Group();
+  phraseGroup.name = "phrases"
+
+
+  for (var i = 0; i < phrases.length; i++) {
+
+    var spriteMap = new THREE.TextureLoader().load( "assets/phrases/"+phrases[i]+".png" );
+    var spriteMaterial = new THREE.SpriteMaterial( { map: spriteMap, color: 0xffffff } );
+    var sprite = new THREE.Sprite( spriteMaterial );
+    sprite.scale.set( 0.5, 0.5, 1 );
+    sprite.name = phrases[i];
+    sprite.position.set( i*0.4-1., 0.3, 0. ); // center
+
+    phraseGroup.add( sprite );
+  }
+
+
+    updateHUDSprites();
+    phraseCheck (currentComic, counter);
+
+
+}
+
+
+
+
 function phraseGroupsGen(){
+  let phraseTheta, phraseRadius
   for (var phrase in phraseHopGroups) {
     phraseHopGroups[phrase]=  new THREE.Group();
-    ComicScene.add(phraseHopGroups[phrase]);
-    phraseHopGroups[phrase].visible = false;
+    TimeLineScene.add(phraseHopGroups[phrase]);
+    phraseHopGroups[phrase].visible = true;
 
     for (var comic in phraseStructure[phrase]) {
       phraseGroupImageLoad(comic, phraseStructure[phrase][comic].panel, phraseHopGroups[phrase])
@@ -135,7 +165,7 @@ function phraseGroupImageLoad (comic, frame, group){
 
        var plane = new THREE.Mesh( geometry, material );
        plane.position.x = 0;
-       plane.position.y = 0;
+       plane.position.y = .;
        plane.position.z = 0;
        plane.comic = comic;
        plane.frame = frame;
@@ -192,7 +222,7 @@ function load_a_group(i){
 
   tempGroup.visible = false;
   tempGroup.name = "comicGroup"+comicLoadingIndex;
-
+  // tempGroup.position.z = 0.25;
   ComicScene.add( tempGroup );
 
 }

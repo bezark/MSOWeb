@@ -24,7 +24,7 @@ function init() {
 
 
   comicCamera = new THREE.PerspectiveCamera( 70, 1, 0.01, 10 );
-  comicCamera.position.z = 1;
+  comicCamera.position.z = 0.75;
 
   timelineCamera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 0.01, 10 );
   timelineCamera.position.z = 1;
@@ -32,7 +32,7 @@ function init() {
   TimeLineScene = new THREE.Scene();
   ComicScene = new THREE.Scene();
 
-	controls = new THREE.TrackballControls( comicCamera );
+	controls = new THREE.TrackballControls( timelineCamera );
 
   comicTarget = new THREE.WebGLRenderTarget( 1024, 1024, { format: THREE.RGBFormat } );
   comicTarget.name = "comicTarget";
@@ -113,7 +113,7 @@ function animate() {
 
     requestAnimationFrame( animate );
   	TWEEN.update();
-			// controls.update();
+			controls.update();
     render();
 
 }
@@ -121,11 +121,12 @@ function animate() {
 function render() {
 	renderer.autoClear = true;
 	renderer.setClearColor( 0xa0a0a0 );
-	renderer.render( ComicScene, comicCamera, comicTarget, true );
-	renderer.setClearColor( 0xfff0f0 );
+  renderer.setClearAlpha( 0.0 );
+
+  composer.render();
+
+  // renderer.render( ComicScene, comicCamera, comicTarget, true );
+	// renderer.setClearColor( 0xfff0f0 );
   renderer.render( TimeLineScene, timelineCamera );
-	// renderer.setClearAlpha( 0.0 );
-	//  CLEAN UP COMPOSER BEFORE ADDING THIS BACK IN. FIX CLIPPING ISSUE composer.render();
-  // renderer.clearDepth();
-  // renderer.render( sceneOrtho, cameraOrtho );
+
 }

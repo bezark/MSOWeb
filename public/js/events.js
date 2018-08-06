@@ -11,11 +11,11 @@ function tapOrClick(event) {
   event.stopPropagation();
   event.preventDefault();
 
-  // if(selectedObjects.length>0){
-  //   phraseHop(selectedObjects[0].name);
-  //   // phraseGroup.getObjectByName(selectedObjects[0].name).visible = false
-  // }else{;}
-  frameAdvance()
+  if(selectedObjects.length>0){
+    phraseHop(selectedObjects[0].name);
+    phraseGroup.getObjectByName(selectedObjects[0].name).visible = false
+  }else{  frameAdvance()}
+
 
 
   // clicks ++;
@@ -63,9 +63,9 @@ function addSelectedObject(object) {
 
 function checkIntersection() {
 
-   raycaster.setFromCamera( mouse, timelineCamera );
+   raycaster.setFromCamera( mouse, comicCamera );
 
-   var intersects = raycaster.intersectObjects( [ timeline ], true );
+   var intersects = raycaster.intersectObjects( [ phraseGroup ], true );
 
    if ( intersects.length > 0 ) {
 

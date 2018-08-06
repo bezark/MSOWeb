@@ -134,17 +134,18 @@ function frameAdvance(){
 
 function time_warp(comic, frame){
   console.log("warping to "+comic, frame);
-  tempTimeline.position.x = comic*-1.05
+  timeline.rotation.z = comic*theta;
+  timeline.visible = true;
 
-  comicGroup = load_a_group(comic);
 
-  scene.add( comicGroup );
+
+
 
 
   counter = frame-1;
-  expand();
+
   frameAdvance();
-  comicGroup.position.y = frame*-1.05;
+  currentComicGroup.position.x = frame*1.05;
 }
 
 function time_travel(target){
@@ -182,7 +183,7 @@ function time_travel(target){
 
 
 
-  new TWEEN.Tween( tempTimeline.rotation ).to( {
+  new TWEEN.Tween( timeline.rotation ).to( {
     z: theta*circOffset}, 2000 ).easing(TWEEN.Easing.Bounce.Out).start().onComplete(function() {
       // comicGroup = load_a_group(i);
       // scene.add( comicGroup );
