@@ -15,7 +15,6 @@ loader = new THREE.TextureLoader();
 ///////TIMELINE//////////
 function load_timeline(){
   radius = (possibleComics.length);
-  console.log(possibleComics.length);
   theta = (Math.PI*2)/((possibleComics.length*4));
   tempTimeline = new THREE.Group();
   timelineImageLoad(0);
@@ -134,13 +133,15 @@ function phraseSpriteGen(){
 
 
 function phraseGroupsGen(){
-  let phraseTheta, phraseRadius
   for (var phrase in phraseHopGroups) {
     phraseHopGroups[phrase]=  new THREE.Group();
+    phraseHopGroups[phrase].theta = (Math.PI*2)/((phraseStructure[phrase].length*4));
+    phraseHopGroups[phrase].radius =(phraseStructure[phrase].length);
     TimeLineScene.add(phraseHopGroups[phrase]);
     phraseHopGroups[phrase].visible = true;
 
     for (var comic in phraseStructure[phrase]) {
+
       phraseGroupImageLoad(comic, phraseStructure[phrase][comic].panel, phraseHopGroups[phrase])
 
       }
@@ -164,8 +165,14 @@ function phraseGroupImageLoad (comic, frame, group){
        } );
 
        var plane = new THREE.Mesh( geometry, material );
+       plane.position.x = group.radius*Math.sin(group.theta*loadi);
+       plane.position.z = group.radius*Math.cos(group.theta*loadi);
+       plane.rotation.y =-group.theta*loadi;
+
+
+
        plane.position.x = 0;
-       plane.position.y = .;
+       plane.position.y = 0.;
        plane.position.z = 0;
        plane.comic = comic;
        plane.frame = frame;
