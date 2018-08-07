@@ -134,21 +134,29 @@ function phraseSpriteGen(){
 
 function phraseGroupsGen(){
   for (var phrase in phraseHopGroups) {
+    var phlength = Object.keys(phraseStructure[phrase]).length;
+
     phraseHopGroups[phrase]=  new THREE.Group();
-    phraseHopGroups[phrase].theta = (Math.PI*2)/((phraseStructure[phrase].length*4));
-    phraseHopGroups[phrase].radius =(phraseStructure[phrase].length);
+    phraseHopGroups[phrase].theta = (Math.PI*2)/(phlength);
+    phraseHopGroups[phrase].radius =phlength*0.25;
+
+    phraseHopGroups[phrase].position.x = phraseHopGroups[phrase].radius;
+    // phraseHopGroups[phrase].position.y = -phraseHopGroups[phrase].radius;
+
     TimeLineScene.add(phraseHopGroups[phrase]);
-    phraseHopGroups[phrase].visible = true;
+    phraseHopGroups[phrase].visible = false;
+    console.log(phraseHopGroups[phrase]);
+    var PHpositionIndex = 0;
 
     for (var comic in phraseStructure[phrase]) {
-
-      phraseGroupImageLoad(comic, phraseStructure[phrase][comic].panel, phraseHopGroups[phrase])
+      phraseGroupImageLoad(comic, phraseStructure[phrase][comic].panel, phraseHopGroups[phrase], PHpositionIndex)
+      PHpositionIndex ++;
 
       }
     }
   }
 
-function phraseGroupImageLoad (comic, frame, group){
+function phraseGroupImageLoad (comic, frame, group, i){
     // console.log("assets/testImages/"+comic+"/"+frame+".png",);
    loader.load(
     // resource URL
@@ -165,20 +173,17 @@ function phraseGroupImageLoad (comic, frame, group){
        } );
 
        var plane = new THREE.Mesh( geometry, material );
-       plane.position.x = group.radius*Math.sin(group.theta*loadi);
-       plane.position.z = group.radius*Math.cos(group.theta*loadi);
-       plane.rotation.y =-group.theta*loadi;
-
-
-
-       plane.position.x = 0;
-       plane.position.y = 0.;
-       plane.position.z = 0;
+       plane.position.x = (group.radius)*Math.sin(group.theta*i);
+       plane.position.y = -(group.radius)*Math.cos((group.theta)*i);
+       plane.rotation.y =(group.theta)*i+1.570796;
+       plane.rotation.x = 1.570796;
+       // plane.rotation.x = 1.570796;
        plane.comic = comic;
        plane.frame = frame;
 
        group.add( plane );
-
+       group.rotation.x = -1.570796;
+       // group.rotation.z = group.theta;
 
 
 
@@ -257,7 +262,7 @@ function imageLoad (groupNo, loadi){
        plane.name = "frame"+loadi;
 
        tempGroup.add( plane );
-  console.log("loading image"+loadi);
+
        loadi ++;
 
        if(loadi < 4){

@@ -30,19 +30,25 @@ function phraseHop (selectedPhrase){
 
 
     var comicsToTraverse = phraseHopGroups[selectedPhrase].children.filter(notCurrentComic);
-
+    console.log(comicsToTraverse);
     var theJump = Math.ceil((Math.random()*(comicsToTraverse.length)));
     theJump--;
 
     if(theJump ==0){theJump=1;}
 
-  for (var i = 0; i < comicsToTraverse.length; i++) {
-    new TWEEN.Tween( comicsToTraverse[i].position ).to( {
-      z: i * -0.75}, 250 ).start()
-  }
-                time_warp(comicsToTraverse[theJump].comic, comicsToTraverse[theJump].frame);
 
-                phraseHopGroups[selectedPhrase].visible = false;
+    new TWEEN.Tween( phraseHopGroups[selectedPhrase].rotation).to( {
+      z: (theJump+1)*phraseHopGroups[selectedPhrase].theta}, 750 ).start().onComplete(function() {
+        time_warp(comicsToTraverse[theJump].comic, comicsToTraverse[theJump].frame);
+        phraseHopGroups[selectedPhrase].visible = false;
+      })
+      var currStarRot = stars.rotation.y
+      new TWEEN.Tween( stars.rotation).to( {
+        y: currStarRot+6.283185}, 1000 ).start();
+
+
+
+                // phraseHopGroups[selectedPhrase].visible = false;
 
 
 }

@@ -63,7 +63,7 @@ function init() {
 
 
 
-
+  initStars();
 
 
 

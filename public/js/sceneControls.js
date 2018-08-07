@@ -83,6 +83,9 @@ function frameAdvance(){
 
     new TWEEN.Tween( currentComicGroup.position ).to( {
       x: (counter*-1.05)}, 250 ).start()
+
+      new TWEEN.Tween( stars.position ).to( {
+        x: -(radius*0.5)-(counter*1.05)}, 250 ).start()
     // new TWEEN.Tween( oldy.material ).to( {
     //   opacity: 0.}, 250 ).start().onComplete(function() {
     //     new TWEEN.Tween( newey.material ).to( {
@@ -134,10 +137,10 @@ function frameAdvance(){
 
 function time_warp(comic, frame){
   console.log("warping to "+comic, frame);
-  timeline.rotation.z = comic*theta;
+  // timeline.rotation.z = comic*theta;
   timeline.visible = true;
-
-
+  // circOffset = comic*theta;
+  time_travel(Number(comic), true);
 
 
 
@@ -148,16 +151,20 @@ function time_warp(comic, frame){
   currentComicGroup.position.x = frame*1.05;
 }
 
-function time_travel(target){
-
+function time_travel(target, warpBool){
   //// TEXUTRE SWAP
+  if (warpBool){
+    comicName = target;
+    circOffset = target;
+  }else{
   circOffset = (circOffset+ target);
   var comicName = circOffset%(possibleComics.length);
   if (comicName<0){
     comicName =21+comicName;
   }
+}
 
-
+  console.log("circoffset:"+circOffset);
   var oldPlaneToChange = timeline.getObjectByName("TimeLine"+currentComic)
 
   if (spun){
@@ -182,9 +189,15 @@ function time_travel(target){
 
 
 
-
+if (warpBool){
+  console.log("warprot");
+   timeline.rotation.z = theta*circOffset;
+}else{
   new TWEEN.Tween( timeline.rotation ).to( {
-    z: theta*circOffset}, 2000 ).easing(TWEEN.Easing.Bounce.Out).start().onComplete(function() {
+    z: theta*circOffset}, 2000 ).easing(TWEEN.Easing.Bounce.Out).start().onComplete(function() {});
+    new TWEEN.Tween( stars.rotation ).to( {
+      z: theta*circOffset}, 2000 ).easing(TWEEN.Easing.Bounce.Out).start().onComplete(function() {});
+  }
       // comicGroup = load_a_group(i);
       // scene.add( comicGroup );
       // expand()
@@ -199,7 +212,7 @@ function time_travel(target){
 
 
 
-    });
+
 
   // comicGroup = load_a_group(i);
   // scene.add( comicGroup );
