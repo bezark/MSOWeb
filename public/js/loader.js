@@ -9,7 +9,7 @@ let theta, radius;
 
 let comicSceneMaterial;
 
-loader = new THREE.TextureLoader();
+let loader = new THREE.TextureLoader();
 
 
 ///////TIMELINE//////////
@@ -30,7 +30,7 @@ function load_timeline(){
    name : "comicSceneMaterial"//theOpac
   });
   console.log("CSM:");
-  console.log(comicSceneMaterial);
+  // console.log(comicSceneMaterial);
 
   return tempTimeline;
 
@@ -145,7 +145,7 @@ function phraseGroupsGen(){
 
     TimeLineScene.add(phraseHopGroups[phrase]);
     phraseHopGroups[phrase].visible = false;
-    console.log(phraseHopGroups[phrase]);
+    // console.log(phraseHopGroups[phrase]);
     var PHpositionIndex = 0;
 
     for (var comic in phraseStructure[phrase]) {
@@ -271,7 +271,7 @@ function imageLoad (groupNo, loadi){
      }else{
        comicLoadingIndex ++;
        if (comicLoadingIndex < 22) {
-         console.log("LOADING GROUP"+comicLoadingIndex)
+         // console.log("LOADING GROUP"+comicLoadingIndex)
          load_a_group(comicLoadingIndex)
        }
      }

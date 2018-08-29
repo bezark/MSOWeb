@@ -151,7 +151,9 @@ function time_warp(comic, frame){
   currentComicGroup.position.x = frame*1.05;
 }
 
-function time_travel(target, warpBool){
+function time_travel(target, warpBool, button){
+
+  button.visible = false;
   //// TEXUTRE SWAP
   if (warpBool){
     comicName = target;
@@ -161,8 +163,8 @@ function time_travel(target, warpBool){
   var comicName = circOffset%(possibleComics.length);
   if (comicName<0){
     comicName =21+comicName;
+    }
   }
-}
 
   console.log("circoffset:"+circOffset);
   var oldPlaneToChange = timeline.getObjectByName("TimeLine"+currentComic)
@@ -189,18 +191,20 @@ function time_travel(target, warpBool){
 
 
 
-if (warpBool){
-  console.log("warprot");
-   timeline.rotation.z = theta*circOffset;
-}else{
-  new TWEEN.Tween( timeline.rotation ).to( {
-    z: theta*circOffset}, 2000 ).easing(TWEEN.Easing.Bounce.Out).start().onComplete(function() {});
-    new TWEEN.Tween( stars.rotation ).to( {
-      z: theta*circOffset}, 2000 ).easing(TWEEN.Easing.Bounce.Out).start().onComplete(function() {});
-  }
-      // comicGroup = load_a_group(i);
-      // scene.add( comicGroup );
-      // expand()
+  if (warpBool){
+    console.log("warprot");
+     timeline.rotation.z = theta*circOffset;
+  }else{
+    new TWEEN.Tween( timeline.rotation ).to( {
+      z: theta*circOffset}, 2000 ).easing(TWEEN.Easing.Bounce.Out).start().onComplete(function() {
+        button.visible = true;
+      });
+      new TWEEN.Tween( stars.rotation ).to( {
+        z: theta*circOffset}, 2000 ).easing(TWEEN.Easing.Bounce.Out).start().onComplete(function() {});
+    }
+        // comicGroup = load_a_group(i);
+        // scene.add( comicGroup );
+        // expand()
 
 
 
@@ -214,8 +218,8 @@ if (warpBool){
 
 
 
-  // comicGroup = load_a_group(i);
-  // scene.add( comicGroup );
+    // comicGroup = load_a_group(i);
+    // scene.add( comicGroup );
 
 
 }
@@ -225,20 +229,20 @@ if (warpBool){
 
 
 
-function WB(){
-  time_travel(-(3+Math.ceil(Math.random()*2)));
+function WB(button){
+  time_travel(-(3+Math.ceil(Math.random()*2)),false, button);
   //time_travel();
 }
 
-function LB(){
-  time_travel(-(Math.ceil(Math.random()*2)));
+function LB(button){
+  time_travel(-(Math.ceil(Math.random()*2)),false, button);
 }
 
 
-function LF(){
-  time_travel((Math.ceil(Math.random()*2)));
+function LF(button){
+  time_travel((Math.ceil(Math.random()*2)),false, button);
 }
 
-function WF(){
-  time_travel(3+(Math.ceil(Math.random()*2)));
+function WF(button){
+  time_travel(3+(Math.ceil(Math.random()*2)),false, button);
 }

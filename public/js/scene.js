@@ -1,4 +1,5 @@
 
+let width, height;
 let camera, ComicScene, TimeLineScene, renderer
 let geometry, material, mesh, comicTarget;
 
@@ -16,23 +17,25 @@ let composer, effectFXAA, outlinePass;
 init();
 animate();
 
-
+function calcWH(){
+  width = window.innerWidth;
+  height = 0.5625*width;
+}
 function init() {
 
-  var width = window.innerWidth;
-  var height = window.innerHeight;
+  calcWH();
 
 
   comicCamera = new THREE.PerspectiveCamera( 70, 1, 0.01, 10 );
   comicCamera.position.z = 0.75;
 
-  timelineCamera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 0.01, 10 );
+  timelineCamera = new THREE.PerspectiveCamera( 70, width / height, 0.01, 10 );
   timelineCamera.position.z = 1;
 
   TimeLineScene = new THREE.Scene();
   ComicScene = new THREE.Scene();
 
-	controls = new THREE.TrackballControls( timelineCamera );
+	// controls = new THREE.TrackballControls( timelineCamera );
 
   comicTarget = new THREE.WebGLRenderTarget( 1024, 1024, { format: THREE.RGBFormat } );
   comicTarget.name = "comicTarget";
@@ -40,7 +43,7 @@ function init() {
 
   renderer = new THREE.WebGLRenderer();
   renderer.setPixelRatio( window.devicePixelRatio );
-  renderer.setSize( window.innerWidth, window.innerHeight );
+  renderer.setSize( width, height );
 	renderer.shadowMap.enabled = true;
 
 
@@ -53,7 +56,7 @@ function init() {
 
   loadAllComics()
 
-
+  UILoad();
 
 	timeline = load_timeline();
 	TimeLineScene.add( timeline );
@@ -75,36 +78,41 @@ var container = document.getElementById("theContainer");
 
 
   window.addEventListener( 'resize', onWindowResize, false );
-
+  window.addEventListener("orientationchange", handleOrientation, false);
 
   container.addEventListener("mouseup", tapOrClick, false);
-  container.addEventListener("touchend", tap, false);
+  container.addEventListener("touchstart", tap, false);
 
 	container.addEventListener( 'mousemove', onTouchMove );
   container.addEventListener( 'touchmove', onTouchMove );
 
 
+
 }  ////END O INIT
 
 function onWindowResize() {
-
-  timelineCamera.aspect = window.innerWidth / window.innerHeight;
+  calcWH();
+  timelineCamera.aspect = width / height;
   timelineCamera.updateProjectionMatrix();
 
 	updateHUDSprites();
 
-  renderer.setSize( window.innerWidth, window.innerHeight );
-	composer.setSize(window.innerWidth, window.innerHeight ); // width, height ); ????????
-	effectFXAA.uniforms['resolution'].value.set(1 / window.innerWidth, 1 / window.innerHeight );
+  renderer.setSize( width, height );
+	composer.setSize(width, height ); // width, height ); ????????
+	effectFXAA.uniforms['resolution'].value.set(1 / width, 1 / height );
 
 }
 
 //
 
+function handleOrientation(event){
+  onWindowResize();
+}
 
 
-
-
+if(window.innerHeight > window.innerWidth){
+    alert("Please use Landscape!");
+}
 
 
 ///////////////
@@ -113,7 +121,7 @@ function animate() {
 
     requestAnimationFrame( animate );
   	TWEEN.update();
-			controls.update();
+			// controls.update();
     render();
 
 }
