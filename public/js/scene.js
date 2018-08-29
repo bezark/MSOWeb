@@ -1,8 +1,9 @@
 
-let camera, scene, renderer, controls, cameraOrtho, sceneOrtho;
-let geometry, material, mesh;
+let width, height;
+let camera, ComicScene, TimeLineScene, renderer
+let geometry, material, mesh, comicTarget;
 
-let comicGroup, HUDgroup, timeline, phraseGroup;
+let comicGroup, timeline, phraseGroup;
 
 let raycaster = new THREE.Raycaster();
 
@@ -16,50 +17,58 @@ let composer, effectFXAA, outlinePass;
 init();
 animate();
 
-
+function calcWH(){
+  width = window.innerWidth;
+  height = 0.5625*width;
+}
 function init() {
 
-  var width = window.innerWidth;
-  var height = window.innerHeight;
+  calcWH();
 
 
-  camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 0.01, 10 );
-  camera.position.z = 1;
+  comicCamera = new THREE.PerspectiveCamera( 70, 1, 0.01, 10 );
+  comicCamera.position.z = 0.75;
 
-  scene = new THREE.Scene();
+  timelineCamera = new THREE.PerspectiveCamera( 70, width / height, 0.01, 10 );
+  timelineCamera.position.z = 1;
 
-	controls = new THREE.TrackballControls( camera );
+  TimeLineScene = new THREE.Scene();
+  ComicScene = new THREE.Scene();
+
+	// controls = new THREE.TrackballControls( timelineCamera );
+
+  comicTarget = new THREE.WebGLRenderTarget( 1024, 1024, { format: THREE.RGBFormat } );
+  comicTarget.name = "comicTarget";
+
+
+  renderer = new THREE.WebGLRenderer();
+  renderer.setPixelRatio( window.devicePixelRatio );
+  renderer.setSize( width, height );
+	renderer.shadowMap.enabled = true;
 
 
   comicArrayLoad();
 
 	phraseSpriteGen();
-	scene.add( phraseGroup );
-
-  comicGroup = load_a_random_group();
-  scene.add( comicGroup );
-
+	ComicScene.add( phraseGroup );
 	phraseGroupsGen();
 
-	timeline = load_timeline(currentComic);
-	scene.add( timeline );
 
-	expand ()
+  loadAllComics()
+
+  UILoad();
+
+	timeline = load_timeline();
+	TimeLineScene.add( timeline );
+
+	// expand ()
 
 
 
-	// HUDgroup = new THREE.Group();
-	// hudSceneGen();
-	//
-	// scene.add( HUDgroup );
-	console.log("PHRASE GROUP:");
-	console.log(phraseGroup);
 
-  renderer = new THREE.WebGLRenderer();
-  renderer.setPixelRatio( window.devicePixelRatio );
-  renderer.setSize( window.innerWidth, window.innerHeight );
-	renderer.shadowMap.enabled = true;
-	renderer.setClearColor( 0xa0a0a0 );
+  initStars();
+
+
 
 	postInit();
 
@@ -69,36 +78,41 @@ var container = document.getElementById("theContainer");
 
 
   window.addEventListener( 'resize', onWindowResize, false );
-
+  window.addEventListener("orientationchange", handleOrientation, false);
 
   container.addEventListener("mouseup", tapOrClick, false);
-  container.addEventListener("touchend", tap, false);
+  container.addEventListener("touchstart", tap, false);
 
 	container.addEventListener( 'mousemove', onTouchMove );
   container.addEventListener( 'touchmove', onTouchMove );
 
 
+
 }  ////END O INIT
 
 function onWindowResize() {
-
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
+  calcWH();
+  timelineCamera.aspect = width / height;
+  timelineCamera.updateProjectionMatrix();
 
 	updateHUDSprites();
 
-  renderer.setSize( window.innerWidth, window.innerHeight );
-	composer.setSize(window.innerWidth, window.innerHeight ); // width, height ); ????????
-	effectFXAA.uniforms['resolution'].value.set(1 / window.innerWidth, 1 / window.innerHeight );
+  renderer.setSize( width, height );
+	composer.setSize(width, height ); // width, height ); ????????
+	effectFXAA.uniforms['resolution'].value.set(1 / width, 1 / height );
 
 }
 
 //
 
+function handleOrientation(event){
+  onWindowResize();
+}
 
 
-
-
+if(window.innerHeight > window.innerWidth){
+    alert("Please use Landscape!");
+}
 
 
 ///////////////
@@ -107,16 +121,20 @@ function animate() {
 
     requestAnimationFrame( animate );
   	TWEEN.update();
-			controls.update();
+			// controls.update();
     render();
 
 }
 
 function render() {
 	renderer.autoClear = true;
-	renderer.setClearColor( 0xfff0f0 );
-	renderer.setClearAlpha( 0.0 );
-	composer.render();
-  // renderer.clearDepth();
-  // renderer.render( sceneOrtho, cameraOrtho );
+	renderer.setClearColor( 0xa0a0a0 );
+  renderer.setClearAlpha( 0.0 );
+
+  composer.render();
+
+  // renderer.render( ComicScene, comicCamera, comicTarget, true );
+	// renderer.setClearColor( 0xfff0f0 );
+  renderer.render( TimeLineScene, timelineCamera );
+
 }
