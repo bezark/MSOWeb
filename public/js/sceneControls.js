@@ -1,17 +1,16 @@
 
 
-
-
-
 let currentComic, currentComicGroup;
 let circOffset = 0;
 let spun = 0;
 let oldTexture;
+
+let counter = 0;
 var possibleComics = [];
 
 function comicArrayLoad (){
 
-  for (var i = 0; i < 21; i++) {
+  for (var i = 0; i < 20; i++) {
       possibleComics.push(i);
   }
   console.log(possibleComics);
@@ -66,7 +65,6 @@ function updateCurrentComic (update){
 
 
 
-let counter = 0;
 
 
 function frameAdvance(){
@@ -96,42 +94,6 @@ function frameAdvance(){
 
 
 
-//
-// function collapse (target){
-//   phraseGroup.visible = false;
-//   for (var i = 0; i < comicGroup.children.length; i++) {
-//     new TWEEN.Tween( comicGroup.children[i].position ).to( {
-//       y: 0}, 250 ).start()
-//   }
-//   new TWEEN.Tween( comicGroup.position ).to( {
-//     y: 0}, 250 ).start().onComplete(function() {
-//       timeline.children[currentComic].visible = true;
-//         time_travel(target)
-//     });
-//
-//     new TWEEN.Tween( timelineCamera.position ).to( {
-//       z: 2.}, 500 ).start()
-//
-// }
-//
-// function expand (){
-//
-//   new TWEEN.Tween( comicGroup.position ).to( {
-//     y: 0}, 250 ).start().onComplete(function() {
-//       timeline.children[currentComic].visible = false;
-//       comicGroup.visible = true;
-//       phraseGroup.visible = true;
-//       for (var i = 0; i < comicGroup.children.length; i++) {
-//         new TWEEN.Tween( comicGroup.children[i].position ).to( {
-//           y: i * -1.05}, 250 ).start()
-//       }
-//     });
-//
-//
-//     new TWEEN.Tween( timelineCamera.position ).to( {
-//       z: 1.}, 500 ).start()
-//
-// }
 
 //////////TIME TRAVEL!!!////////
 
@@ -230,6 +192,7 @@ function time_travel(target, warpBool, button){
 
 
 function WB(button){
+
   time_travel(-(3+Math.ceil(Math.random()*2)),false, button);
   //time_travel();
 }
