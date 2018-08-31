@@ -20,7 +20,7 @@ function load_timeline(){
   timelineImageLoad(0);
 
   tempTimeline.position.x = -radius;
-  // tempTimeline.rotation.z = theta;
+  tempTimeline.position.z = 0.2;
 
 
   comicSceneMaterial = new THREE.MeshBasicMaterial( {
@@ -85,7 +85,8 @@ function timelineImageLoad (loadi){
        if(loadi < possibleComics.length ){
        timelineImageLoad (loadi);
      }else{
-       console.log(tempTimeline);
+        updateCurrentComic(0);
+        time_warp(0, 0);
      }
 
 
@@ -112,27 +113,30 @@ function phraseSpriteGen(){
 
   for (var i = 0; i < phrases.length; i++) {
 
-    var spriteMap = new THREE.TextureLoader().load( "assets/phrases/"+phrases[i]+".png" );
-    var spriteMaterial = new THREE.SpriteMaterial( { map: spriteMap, color: 0xffffff } );
-    var sprite = new THREE.Sprite( spriteMaterial );
-    sprite.scale.set( 0.5, 0.5, 1 );
-    sprite.name = phrases[i];
-    sprite.position.set( i*0.4-1., 0.3, 0. ); // center
 
-    phraseGroup.add( sprite );
+
+
+
+
+    var geometry = new THREE.CircleGeometry( 5, 32 );
+    var material = new THREE.MeshBasicMaterial( { color: 0xffff00 } );
+    var circle = new THREE.Mesh( geometry, material );
+    circle.name = phrases[i];
+    circle.isPhrase = true;
+    // circle.position.set( i*0.4-1., 0.3, 0 ); // center
+  circle.scale.set( 0.05, 0.05, 1 )
+  console.log("CIRCLE");
+  console.log(circle);
+    phraseGroup.add( circle );
   }
 
 
-    updateHUDSprites();
     phraseCheck (currentComic, counter);
 
 
 }
 
-
-
-
-function phraseGroupsGen(){
+function phraseGroupsGen(){ //////This is weird 3d circle
   for (var phrase in phraseHopGroups) {
     var phlength = Object.keys(phraseStructure[phrase]).length;
 
@@ -226,16 +230,16 @@ function load_a_group(i){
   geometry = new THREE.PlaneGeometry( 1, 1, 1 );
 
   var loadi = 0;
-  updateCurrentComic(i);
+
   imageLoad (groupNo, loadi);
 
-  counter = 0; ////SHOULDN'T BE HERE
+
   phraseCheck (currentComic, counter);
 
   tempGroup.visible = false;
   tempGroup.name = "comicGroup"+comicLoadingIndex;
-  // tempGroup.position.z = 0.25;
-  ComicScene.add( tempGroup );
+  tempGroup.position.z = 0.2;
+  TimeLineScene.add( tempGroup );
 
 }
 

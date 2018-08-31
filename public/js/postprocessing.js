@@ -10,12 +10,12 @@ let outlineParams  = {
 
 function postInit (){
 
-      composer = new THREE.EffectComposer( renderer, comicTarget );
+      composer = new THREE.EffectComposer( renderer, warpTarget );
 
-      var renderPass = new THREE.RenderPass( ComicScene, comicCamera );
+      var renderPass = new THREE.RenderPass( TimeLineScene, timelineCamera );
       composer.addPass( renderPass );
 
-      outlinePass = new THREE.OutlinePass( new THREE.Vector2(window.innerWidth, window.innerHeight), ComicScene, comicCamera);
+      outlinePass = new THREE.OutlinePass( new THREE.Vector2(window.innerWidth, window.innerHeight), TimeLineScene, timelineCamera);
       composer.addPass( outlinePass );
 
 
