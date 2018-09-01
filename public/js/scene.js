@@ -33,7 +33,7 @@ function init() {
   calcWH();
 
 
-  warpCamera = new THREE.PerspectiveCamera( 70, 1, 0.01, 10 );
+  warpCamera = new THREE.PerspectiveCamera( 70, width / height, 0.01, 10 );
   warpCamera.position.z = 0.75;
 
   timelineCamera = new THREE.PerspectiveCamera( 70, width / height, 0.01, 10 );
@@ -71,13 +71,13 @@ function init() {
 
 
 
-
+  warpSceneGen()
 
   initStars();
 
 
 
-	postInit();
+	// postInit();
 
 var container = document.getElementById("theContainer");
 
@@ -125,6 +125,16 @@ if(window.innerHeight > window.innerWidth){
 }
 
 
+
+
+
+
+
+
+
+
+
+
 ///////////////
 
 function animate() {
@@ -141,10 +151,10 @@ function render() {
 	renderer.setClearColor( 0xa0a0a0 );
   renderer.setClearAlpha( 0.0 );
 
-  composer.render();
+  // render.render();
 
-  // renderer.render( ComicScene, comicCamera, comicTarget, true );
-	// renderer.setClearColor( 0xfff0f0 );
   renderer.render( TimeLineScene, timelineCamera );
+  renderer.setClearColor( "rgb(244, 148, 1)" );
+  renderer.render( WarpScene, warpCamera, warpTarget, true );
 
 }

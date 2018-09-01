@@ -11,7 +11,7 @@ let comicSceneMaterial;
 
 let loader = new THREE.TextureLoader();
 
-
+let warpb
 ///////TIMELINE//////////
 function load_timeline(){
   radius = (possibleComics.length);
@@ -118,13 +118,13 @@ function phraseSpriteGen(){
 
 
 
-    var geometry = new THREE.CircleGeometry( 5, 32 );
-    var material = new THREE.MeshBasicMaterial( { color: 0xffff00 } );
+    var geometry = new THREE.PlaneGeometry( 1.7778, 1, 1 );
+    var material = new THREE.MeshBasicMaterial( { color: 0xffffff, map: warpTarget.texture} );
     var circle = new THREE.Mesh( geometry, material );
     circle.name = phrases[i];
     circle.isPhrase = true;
     // circle.position.set( i*0.4-1., 0.3, 0 ); // center
-  circle.scale.set( 0.05, 0.05, 1 )
+  circle.scale.set( 0.5, 0.5, 1 )
   console.log("CIRCLE");
   console.log(circle);
     phraseGroup.add( circle );
@@ -147,7 +147,7 @@ function phraseGroupsGen(){ //////This is weird 3d circle
     phraseHopGroups[phrase].position.x = phraseHopGroups[phrase].radius;
     // phraseHopGroups[phrase].position.y = -phraseHopGroups[phrase].radius;
 
-    TimeLineScene.add(phraseHopGroups[phrase]);
+    WarpScene.add(phraseHopGroups[phrase]);
     phraseHopGroups[phrase].visible = false;
     // console.log(phraseHopGroups[phrase]);
     var PHpositionIndex = 0;
@@ -204,7 +204,102 @@ function phraseGroupImageLoad (comic, frame, group, i){
 
 
 
+function warpSceneGen(){
+console.log("HELLLLO");
 
+  warpbackgroundgeo =  new THREE.PlaneGeometry( 10, 10, 1 );
+  // uiGeo = new THREE.PlaneGeometry( 1.92, 1.08, 1 );
+  loader.load(
+   // resource URL
+
+   'assets/warpTex.png',
+   // Function when resource is loaded
+   function ( texture ) {
+
+
+      var warpbackMaterial=  new THREE.MeshBasicMaterial( { map: texture, color: 0xffffff, transparent: true } );
+      warpb = new THREE.Mesh( warpbackgroundgeo, warpbackMaterial );
+      warpb.scale.set( 1, 0.5625, 1 );
+      warpb.name = "warp";
+
+
+      //  ui.scale.set( 1, 0.5625, 1 );
+      // ui.name = "UI";
+      warpb.position.set( 0., 0., -1.); // center
+
+        console.log("WARPING LOADING WHATEVER");
+
+    //   TimeLineScene.add(ui);
+    //
+    //   var warpSphere =  new THREE.PlaneGeometry( 100, 100, 100 );
+    //   var tempmaterial = new THREE.MeshBasicMaterial( { color: "rgb(255, 255, 255)", map: new THREE.TextureLoader().load( 'public/assets/warpTex.png')} );
+    //   var circle = new THREE.Mesh( warpSphere, tempmaterial );
+    //
+    // circle.scale.set( 0.05, 0.05, 1 )
+
+      WarpScene.add( warpb );
+
+
+
+
+
+
+
+
+
+    });
+    var jokes = new THREE.Group()
+    var jokegeo =  new THREE.PlaneGeometry( 1., 1., 1 );
+
+    loader.load(
+     // resource URL
+     'assets/phraseTex/joke.png',
+     // Function when resource is loaded
+     function ( texture ) {
+
+
+
+
+
+
+    var jokemat = new THREE.MeshBasicMaterial( { map: texture, color: 0xffffff, transparent: true } );
+    for ( var i = 0; i < 500; i ++ ) {
+        meshy = new THREE.Mesh( jokegeo, jokemat );
+      meshy.position.x = 1. * Math.random()-0.5;
+         meshy.position.y = 1. * Math.random() - 0.5;
+         meshy.position.z = Math.random()*-10.;
+         meshy.rotation.z =(Math.PI*2)/250*i+1.570796;
+         meshy.scale.x = 0.25
+         meshy.scale.y=0.25;
+         jokes.add(meshy);
+         console.log(meshy);
+    }
+    WarpScene.add(jokes);
+  });
+
+            //
+            // var geometry = new THREE.BufferGeometry();
+            //
+            //
+            // var vertices = [];
+            // var sprite = new THREE.TextureLoader().load( 'assets/phraseTex/joke.png' );
+            // for ( var i = 0; i < 100; i ++ ) {
+            //   var x = 1. * Math.random()-0.5;
+            //   var y = 1. * Math.random() - 0.5;
+            //   var z = 0.2;
+            //   vertices.push( x, y, z );
+            // }
+            // geometry.addAttribute( 'position', new THREE.Float32BufferAttribute( vertices, 3 ) );
+            // material = new THREE.PointsMaterial( { size: 0.5, map: sprite, sizeAttenuation: true, alphaTest: 0.1, transparent: true } );
+            // // material.color.setHSL( 0.0, 0., 0.,0.  );
+            // textstars = new THREE.Points( geometry, material );
+            //
+            //
+            // WarpScene.add( textstars );
+
+
+
+}
 
 
 ///////COMICS///////////

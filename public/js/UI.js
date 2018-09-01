@@ -8,6 +8,8 @@ console.log(UIstructure);
 var buttonarray = [];
 var buttonCount = 0;
 let buttonGroup;
+
+let ui;
 function UILoad (){
   buttonGroup = new THREE.Group();
   TimeLineScene.add(buttonGroup);
@@ -22,7 +24,7 @@ function UILoad (){
 
 
       var uiMaterial=  new THREE.MeshBasicMaterial( { map: texture, color: 0xffffff, transparent: true } );
-      var ui = new THREE.Mesh( uiGeo, uiMaterial );
+       ui = new THREE.Mesh( uiGeo, uiMaterial );
       // ui.scale.set( 1.92, 1.08, 1 );
 
 

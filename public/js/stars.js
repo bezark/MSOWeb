@@ -19,7 +19,7 @@ function rotateStars(theta){
 
 let stars;
 function initStars(){
-        console.log("STARS!");
+      
         var geometry = new THREE.BufferGeometry();
 
 
