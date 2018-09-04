@@ -18,27 +18,34 @@ init();
 animate();
 
 function calcWH(){
-  width = window.innerWidth;
-  height = 0.5625*width;
+  height = window.innerHeight;//width *0.5625;
+
+  if (window.innerWidth > height*1.7777777778){
+      width = height*1.7777777778
+  }else{
+    width = window.innerWidth;
+  }
+  // document.getElementById("mobileLog").innerHTML = window.innerWidth +"x"+ window.innerHeight+"--"+width+"x"+height
+
 }
 function init() {
 
   calcWH();
 
 
-  comicCamera = new THREE.PerspectiveCamera( 70, 1, 0.01, 10 );
-  comicCamera.position.z = 0.75;
+  warpCamera = new THREE.PerspectiveCamera( 70, width / height, 0.01, 101 );
+  warpCamera.position.z = 0.75;
 
-  timelineCamera = new THREE.PerspectiveCamera( 70, width / height, 0.01, 10 );
+  timelineCamera = new THREE.PerspectiveCamera( 70, width / height, 0.01, 1000 );
   timelineCamera.position.z = 1;
 
   TimeLineScene = new THREE.Scene();
-  ComicScene = new THREE.Scene();
+  WarpScene = new THREE.Scene();
 
-	// controls = new THREE.TrackballControls( timelineCamera );
+	controls = new THREE.TrackballControls( timelineCamera );
 
-  comicTarget = new THREE.WebGLRenderTarget( 1024, 1024, { format: THREE.RGBFormat } );
-  comicTarget.name = "comicTarget";
+  warpTarget = new THREE.WebGLRenderTarget( 1024, 1024, { format: THREE.RGBFormat } );
+  warpTarget.name = "warpTarget";
 
 
   renderer = new THREE.WebGLRenderer();
@@ -50,8 +57,8 @@ function init() {
   comicArrayLoad();
 
 	phraseSpriteGen();
-	ComicScene.add( phraseGroup );
-	phraseGroupsGen();
+	TimeLineScene.add( phraseGroup );
+	comicTexRefGen();
 
 
   loadAllComics()
@@ -61,16 +68,16 @@ function init() {
 	timeline = load_timeline();
 	TimeLineScene.add( timeline );
 
-	// expand ()
 
 
 
+  warpSceneGen()
 
   initStars();
 
 
 
-	postInit();
+	// postInit();
 
 var container = document.getElementById("theContainer");
 
@@ -89,13 +96,15 @@ var container = document.getElementById("theContainer");
 
 
 }  ////END O INIT
-
+calc = 0
 function onWindowResize() {
   calcWH();
+  calc ++
+
   timelineCamera.aspect = width / height;
   timelineCamera.updateProjectionMatrix();
 
-	updateHUDSprites();
+
 
   renderer.setSize( width, height );
 	composer.setSize(width, height ); // width, height ); ????????
@@ -107,12 +116,23 @@ function onWindowResize() {
 
 function handleOrientation(event){
   onWindowResize();
+
 }
 
 
 if(window.innerHeight > window.innerWidth){
     alert("Please use Landscape!");
 }
+
+
+
+
+
+
+
+
+
+
 
 
 ///////////////
@@ -131,10 +151,10 @@ function render() {
 	renderer.setClearColor( 0xa0a0a0 );
   renderer.setClearAlpha( 0.0 );
 
-  composer.render();
+  // render.render();
 
-  // renderer.render( ComicScene, comicCamera, comicTarget, true );
-	// renderer.setClearColor( 0xfff0f0 );
   renderer.render( TimeLineScene, timelineCamera );
+  renderer.setClearColor( "rgb(244, 148, 1)" );
+  renderer.render( WarpScene, warpCamera, warpTarget, true );
 
 }

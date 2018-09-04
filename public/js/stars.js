@@ -19,23 +19,31 @@ function rotateStars(theta){
 
 let stars;
 function initStars(){
-        console.log("STARS!");
-        var geometry = new THREE.BufferGeometry();
+
+        var geometry = new THREE.PlaneGeometry(0.25, 0.25, 1.);
 
 
-    		var vertices = [];
-				var sprite = new THREE.TextureLoader().load( 'assets/star3.png' );
-				for ( var i = 0; i < 10000; i ++ ) {
-					var x = 50. * Math.random()-25.;
-					var y = 50. * Math.random() - 25;
-					var z = 50. * Math.random() - 25;
-					vertices.push( x, y, z );
-				}
-				geometry.addAttribute( 'position', new THREE.Float32BufferAttribute( vertices, 3 ) );
-				material = new THREE.PointsMaterial( { size: 50, map: sprite, sizeAttenuation: false, alphaTest: 0.25, transparent: true } );
-				material.color.setHSL( 0.0, 0., 0.5,  );
-				stars = new THREE.Points( geometry, material );
-        stars.position.x = -radius*0.5;
-				TimeLineScene.add( stars );
+    		var starsArray = [];
+        for (var i = 0; i < 4; i++) {
+            starsArray.push(new THREE.TextureLoader().load( 'assets/stars/Star'+i+'.png' ))
+        }
+        stars = new THREE.Group
+        stars.position.x = -radius;
+        TimeLineScene.add( stars );
+
+				for ( var i = 0; i < 1000; i ++ ) {
+				var material = new THREE.MeshBasicMaterial( { map: starsArray[Math.floor(Math.random()*4)], transparent: true } );
+				// material.color.setHSL( 0.0, 0., 0.5,  );
+
+				var starMesh = new THREE.Mesh(geometry, material)
+
+
+
+        starMesh.position.x =  radius*Math.sin(theta*i)+(10. * Math.random() - 5);
+        starMesh.position.y = radius*Math.cos(theta*i)+(5. * Math.random() - 2.5);
+        starMesh.position.z = -10. * Math.random();
+        stars.add(starMesh);
 
       }
+      console.log(stars);
+    }

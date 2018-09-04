@@ -1,6 +1,6 @@
 
 
-
+// let mobileLog = document.getElementById("mobileLog");
 
 
 let currentComic, currentComicGroup;
@@ -8,66 +8,46 @@ let circOffset = 0;
 let spun = 0;
 let oldTexture;
 var possibleComics = [];
+let counter = 0;
+let comicName = 0;
+// updateCurrentComic(comicName);
 
 function comicArrayLoad (){
 
   for (var i = 0; i < 21; i++) {
       possibleComics.push(i);
   }
-  console.log(possibleComics);
-}
-
-
-
-
-function load_a_random_group(){
-
-  var i = possibleComics.length
-  var theNumber = Math.floor(Math.random() * (i));
-  var loadedGroup = load_a_group(theNumber)
-  return loadedGroup;
-
 
 }
 
 
 
-function phraseCheck(comic, frame){
+
+
+function phraseCheck(comic, frame){ ////add positioning
 
   for (var phrase in phraseStructure) {
 
-    if (phraseStructure[phrase].hasOwnProperty(comic)) {
+    if ((phraseStructure[phrase].hasOwnProperty(comic))&&(phraseStructure[phrase][comic].panel == frame)) {
+      phraseGroup.getObjectByName(phrase).visible = true;
+        phraseGroup.getObjectByName(phrase).scale.x = phraseStructure[phrase][comic].scale.x;
+        phraseGroup.getObjectByName(phrase).scale.y = phraseStructure[phrase][comic].scale.y;
+        phraseGroup.getObjectByName(phrase).position.x = phraseStructure[phrase][comic].pos.x
+        phraseGroup.getObjectByName(phrase).position.y = phraseStructure[phrase][comic].pos.y
 
-      if(phraseStructure[phrase][comic].panel == frame){
-          // console.log(frame, comic);
-          phraseGroup.getObjectByName(phrase).visible = true;
-          new TWEEN.Tween( phraseGroup.getObjectByName(phrase).position ).to( {
-            x: (0)}, 250 ).start()
-        }else{ /////PROBAVLY REDUNDANT
-          phraseGroup.getObjectByName(phrase).position.set( 1., 0., 0 )
-          phraseGroup.getObjectByName(phrase).visible = false;
-      }}else{
-        phraseGroup.getObjectByName(phrase).position.set( 1., 0., 0 )
+      }else{
+        phraseGroup.getObjectByName(phrase).position.set( 0., 0., 0.257 )
         phraseGroup.getObjectByName(phrase).visible = false;
 
     }
   }
 }
 
-
-
-
-
 function updateCurrentComic (update){
   currentComic = update;
-  currentComicGroup = ComicScene.getObjectByName("comicGroup"+currentComic);
+  currentComicGroup = TimeLineScene.getObjectByName("comicGroup"+currentComic);
 
 }
-
-
-
-let counter = 0;
-
 
 function frameAdvance(){
 
@@ -78,71 +58,86 @@ function frameAdvance(){
   }
     phraseCheck (currentComic, counter);
 
-    // var oldy = comicGroup.getObjectByName("frame"+precounter);
-    // var newey = comicGroup.getObjectByName("frame"+counter);
 
     new TWEEN.Tween( currentComicGroup.position ).to( {
       x: (counter*-1.05)}, 250 ).start()
 
-      new TWEEN.Tween( stars.position ).to( {
-        x: -(radius*0.5)-(counter*1.05)}, 250 ).start()
-    // new TWEEN.Tween( oldy.material ).to( {
-    //   opacity: 0.}, 250 ).start().onComplete(function() {
-    //     new TWEEN.Tween( newey.material ).to( {
-    //         opacity: 1.}, 250 ).start()
-    // });
+
+
 }
 
 
 
-
-//
-// function collapse (target){
-//   phraseGroup.visible = false;
-//   for (var i = 0; i < comicGroup.children.length; i++) {
-//     new TWEEN.Tween( comicGroup.children[i].position ).to( {
-//       y: 0}, 250 ).start()
-//   }
-//   new TWEEN.Tween( comicGroup.position ).to( {
-//     y: 0}, 250 ).start().onComplete(function() {
-//       timeline.children[currentComic].visible = true;
-//         time_travel(target)
-//     });
-//
-//     new TWEEN.Tween( timelineCamera.position ).to( {
-//       z: 2.}, 500 ).start()
-//
-// }
-//
-// function expand (){
-//
-//   new TWEEN.Tween( comicGroup.position ).to( {
-//     y: 0}, 250 ).start().onComplete(function() {
-//       timeline.children[currentComic].visible = false;
-//       comicGroup.visible = true;
-//       phraseGroup.visible = true;
-//       for (var i = 0; i < comicGroup.children.length; i++) {
-//         new TWEEN.Tween( comicGroup.children[i].position ).to( {
-//           y: i * -1.05}, 250 ).start()
-//       }
-//     });
-//
-//
-//     new TWEEN.Tween( timelineCamera.position ).to( {
-//       z: 1.}, 500 ).start()
-//
-// }
-
 //////////TIME TRAVEL!!!////////
+var planeToChange, oldPlaneToChange;
+function time_travel(target, warpBool, button){
+  button.material.map = button.pressedTexture;
+  button.material.needsUpdate = true;
+
+  counter = 0;
+  phraseCheck (currentComic, counter);
+
+  new TWEEN.Tween( currentComicGroup.position ).to( {
+  x: (counter*-1.05)}, 250 ).start().onComplete(function(){
+
+
+      circOffset = (circOffset+ target);
+      var comicName = circOffset%(possibleComics.length);
+      if (comicName<0){
+        comicName =21+comicName;
+        // }
+      }
+
+
+       oldPlaneToChange = timeline.getObjectByName("TimeLine"+currentComic)
+
+
+        oldPlaneToChange.material.opacity = 1.;
+        currentComicGroup.visible = false;
+
+
+      updateCurrentComic(comicName);
+
+
+
+      planeToChange = timeline.getObjectByName("TimeLine"+comicName);
+
+      oldTexture = planeToChange.material.map;
+
+      phraseCheck (currentComic, 0);
+
+///// This might be where the loading error is
+
+      new TWEEN.Tween( timeline.rotation ).to( {
+        z: theta*circOffset}, 2000 ).easing(TWEEN.Easing.Bounce.Out).start().onComplete(function() {
+          button.material.map = button.unPressedTex;
+          button.material.needsUpdate = true;
+          currentComicGroup.visible = true;
+          planeToChange.material.opacity = 0;
+        });
+        new TWEEN.Tween( stars.rotation ).to( {
+          z: theta*circOffset}, 2000 ).easing(TWEEN.Easing.Bounce.Out).start().onComplete(function() {});
+
+    });
+
+
+}
 
 function time_warp(comic, frame){
-  console.log("warping to "+comic, frame);
-  // timeline.rotation.z = comic*theta;
+  timeline.getObjectByName("TimeLine"+currentComic).material.opacity = 1.;
+  currentComicGroup.position.x = 0;
+  currentComicGroup.visible = false;
+  console.log("warping");
+  updateCurrentComic(comic);
+
+  timeline.rotation.z = comic*theta;
   timeline.visible = true;
-  // circOffset = comic*theta;
-  time_travel(Number(comic), true);
+  timeline.getObjectByName("TimeLine"+comic).material.opacity = 0;
+  circOffset = comic;
+  stars.rotation.z = theta*circOffset;
+  currentComicGroup.visible = true;
 
-
+ phraseCheck (currentComic, counter);
 
 
   counter = frame-1;
@@ -151,87 +146,16 @@ function time_warp(comic, frame){
   currentComicGroup.position.x = frame*1.05;
 }
 
-function time_travel(target, warpBool, button){
-
-  button.visible = false;
-  //// TEXUTRE SWAP
-  if (warpBool){
-    comicName = target;
-    circOffset = target;
-  }else{
-  circOffset = (circOffset+ target);
-  var comicName = circOffset%(possibleComics.length);
-  if (comicName<0){
-    comicName =21+comicName;
-    }
-  }
-
-  console.log("circoffset:"+circOffset);
-  var oldPlaneToChange = timeline.getObjectByName("TimeLine"+currentComic)
-
-  if (spun){
-    oldPlaneToChange.material.map = oldTexture;
-    currentComicGroup.visible = false;
-  }
-
-  spun = 1;
-
-  updateCurrentComic(comicName);
-  console.log("currentComicGroup:");
-  console.log(currentComicGroup);
-  currentComicGroup.visible = true;
-
-
-
-  planeToChange = timeline.getObjectByName("TimeLine"+comicName);
-
-  oldTexture = planeToChange.material.map;
-  planeToChange.material.map = comicTarget.texture;
-  phraseCheck (currentComic, 0);
-
-
-
-  if (warpBool){
-    console.log("warprot");
-     timeline.rotation.z = theta*circOffset;
-  }else{
-    new TWEEN.Tween( timeline.rotation ).to( {
-      z: theta*circOffset}, 2000 ).easing(TWEEN.Easing.Bounce.Out).start().onComplete(function() {
-        button.visible = true;
-      });
-      new TWEEN.Tween( stars.rotation ).to( {
-        z: theta*circOffset}, 2000 ).easing(TWEEN.Easing.Bounce.Out).start().onComplete(function() {});
-    }
-        // comicGroup = load_a_group(i);
-        // scene.add( comicGroup );
-        // expand()
 
 
 
 
-
-
-
-
-
-
-
-
-
-    // comicGroup = load_a_group(i);
-    // scene.add( comicGroup );
-
-
-}
-
-
-
-
-
-
+///////BUTTONS///////////
 function WB(button){
+
+
   time_travel(-(3+Math.ceil(Math.random()*2)),false, button);
-  //time_travel();
+
 }
 
 function LB(button){
@@ -245,4 +169,5 @@ function LF(button){
 
 function WF(button){
   time_travel(3+(Math.ceil(Math.random()*2)),false, button);
+
 }

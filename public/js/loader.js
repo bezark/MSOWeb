@@ -5,13 +5,16 @@ comicStructure = JSON.parse(req.responseText);
 phraseStructure = comicStructure.phrases
 
 
+let phrases = ["then","remember","saying","where","joke"];
+
+
 let theta, radius;
 
 let comicSceneMaterial;
 
 let loader = new THREE.TextureLoader();
 
-
+let warpb
 ///////TIMELINE//////////
 function load_timeline(){
   radius = (possibleComics.length);
@@ -20,7 +23,7 @@ function load_timeline(){
   timelineImageLoad(0);
 
   tempTimeline.position.x = -radius;
-  // tempTimeline.rotation.z = theta;
+  tempTimeline.position.z = 0.256;
 
 
   comicSceneMaterial = new THREE.MeshBasicMaterial( {
@@ -29,8 +32,8 @@ function load_timeline(){
    opacity: 1.,
    name : "comicSceneMaterial"//theOpac
   });
-  console.log("CSM:");
-  // console.log(comicSceneMaterial);
+
+
 
   return tempTimeline;
 
@@ -85,7 +88,8 @@ function timelineImageLoad (loadi){
        if(loadi < possibleComics.length ){
        timelineImageLoad (loadi);
      }else{
-       console.log(tempTimeline);
+        updateCurrentComic(0);
+        time_warp(0, 0);
      }
 
 
@@ -112,91 +116,183 @@ function phraseSpriteGen(){
 
   for (var i = 0; i < phrases.length; i++) {
 
-    var spriteMap = new THREE.TextureLoader().load( "assets/phrases/"+phrases[i]+".png" );
-    var spriteMaterial = new THREE.SpriteMaterial( { map: spriteMap, color: 0xffffff } );
-    var sprite = new THREE.Sprite( spriteMaterial );
-    sprite.scale.set( 0.5, 0.5, 1 );
-    sprite.name = phrases[i];
-    sprite.position.set( i*0.4-1., 0.3, 0. ); // center
 
-    phraseGroup.add( sprite );
+
+
+
+
+    var geometry = new THREE.PlaneGeometry( 1.7778, 1, 1 );
+    var material = new THREE.MeshBasicMaterial( { opacity: 0., transparent: true} );
+    var circle = new THREE.Mesh( geometry, material );
+    circle.name = phrases[i];
+    circle.isPhrase = true;
+    // circle.position.z = -0.257;; // center
+    circle.scale.set( 0.5, 0.5, 1 )
+
+
+    phraseGroup.add( circle );
   }
 
 
-    updateHUDSprites();
     phraseCheck (currentComic, counter);
 
 
-}
-
-
-
-
-function phraseGroupsGen(){
-  for (var phrase in phraseHopGroups) {
-    var phlength = Object.keys(phraseStructure[phrase]).length;
-
-    phraseHopGroups[phrase]=  new THREE.Group();
-    phraseHopGroups[phrase].theta = (Math.PI*2)/(phlength);
-    phraseHopGroups[phrase].radius =phlength*0.25;
-
-    phraseHopGroups[phrase].position.x = phraseHopGroups[phrase].radius;
-    // phraseHopGroups[phrase].position.y = -phraseHopGroups[phrase].radius;
-
-    TimeLineScene.add(phraseHopGroups[phrase]);
-    phraseHopGroups[phrase].visible = false;
-    // console.log(phraseHopGroups[phrase]);
-    var PHpositionIndex = 0;
-
-    for (var comic in phraseStructure[phrase]) {
-      phraseGroupImageLoad(comic, phraseStructure[phrase][comic].panel, phraseHopGroups[phrase], PHpositionIndex)
-      PHpositionIndex ++;
-
-      }
-    }
   }
 
-function phraseGroupImageLoad (comic, frame, group, i){
-    // console.log("assets/testImages/"+comic+"/"+frame+".png",);
-   loader.load(
-    // resource URL
-
-    "assets/testImages/"+comic+"/"+frame+".png",
-    // Function when resource is loaded
-    function ( texture) {
-      // if(loadi == 0){theOpac = 1.}else{theOpac = 0.};
-       material = new THREE.MeshBasicMaterial( {
-        map: texture,
-        transparent: true,
-        opacity: 1. //theOpac
-
-       } );
-
-       var plane = new THREE.Mesh( geometry, material );
-       plane.position.x = (group.radius)*Math.sin(group.theta*i);
-       plane.position.y = -(group.radius)*Math.cos((group.theta)*i);
-       plane.rotation.y =(group.theta)*i+1.570796;
-       plane.rotation.x = 1.570796;
-       // plane.rotation.x = 1.570796;
-       plane.comic = comic;
-       plane.frame = frame;
-
-       group.add( plane );
-       group.rotation.x = -1.570796;
-       // group.rotation.z = group.theta;
-
-
-
-    },
-    // Function called when download progresses
-    function ( xhr ) {
-      console.log( (xhr.loaded / xhr.total * 100) + '% loaded' );
-    },
-    // Function called when download errors
-    function ( xhr ) {
-      console.log( 'An error happened' );
-    });
+let phraseHopGroups= {
+  "then": null,
+  "remember": null,
+  "saying": null,
+  "where": null,
+  "joke": null
 }
+
+function comicTexRefGen(){
+  var texArray = []
+  for (var phrase in phraseStructure) {
+
+  texArray.push(phrase, Object.keys(phraseStructure[phrase]))
+
+    // WarpScene.add(phraseHopGroups[phrase]);
+
+    //
+    // for (var comic in phraseStructure[phrase]) {
+    //   console.log(Object.keys(phraseStructure[phrase][comic]));
+    //   phraseStructure[phrase][comic].tex = "toop!"
+      // PHpositionIndex ++;
+      }
+
+      phraseGroupLoad(texArray)//
+    }
+
+function phraseGroupLoad(texArray){
+  if (texArray.length){
+    var phraseGroup = texArray.splice(0, 2)
+    phraseGroupImageLoad  (phraseGroup[0],phraseGroup[1], texArray)
+  }else{
+    console.log('PHRASE STRUCTURE:');
+    console.log(phraseStructure);
+  }
+}
+
+function phraseGroupImageLoad (phrase, comics, remainingGroups){
+
+
+    if(comics.length){
+      var comic = comics.splice (0, 1);
+
+      loader.load(
+       // resource URL
+
+       "assets/testImages/"+comic+"/"+phraseStructure[phrase][comic].panel+".png",
+       // Function when resource is loaded
+       function ( texture) {
+
+        phraseStructure[phrase][comic].texture = texture;
+        phraseGroupImageLoad(phrase, comics, remainingGroups)
+       },
+       // Function called when download progresses
+       function ( xhr ) {
+         console.log( (xhr.loaded / xhr.total * 100) + '% loaded' );
+       },
+       // Function called when download errors
+       function ( xhr ) {
+         console.log( 'An error happened loading textures for warp comics' );
+       });
+
+    }else{
+      phraseGroupLoad(remainingGroups)
+    }
+    // console.log("assets/testImages/"+comic+"/"+frame+".png",);
+
+
+}
+
+
+
+
+let partieTex ={};
+let warpPlaneFar, warpPlaneNear;
+function warpSceneGen(){
+
+
+  warpbackgroundgeo =  new THREE.PlaneGeometry( 100, 100, 1 );
+
+  loader.load(
+   // resource URL
+
+   'assets/warpTex.png',
+   // Function when resource is loaded
+   function ( texture ) {
+
+      var warpbackMaterial=  new THREE.MeshBasicMaterial( { map: texture, color: 0xffffff, transparent: true } );
+      warpb = new THREE.Mesh( warpbackgroundgeo, warpbackMaterial );
+      warpb.scale.set( 1, 0.5625, 1 );
+      warpb.name = "warp";
+
+      warpb.position.set( 0., 0., -10.); // center
+
+
+      WarpScene.add( warpb );
+
+
+    });
+
+    partieTexGen(0);
+    var warpPlane = new THREE.PlaneGeometry( 1., 1., 1. );
+    var warpPlaneMaterialNear=  new THREE.MeshBasicMaterial( { color: 0xffffff, transparent: true } );
+    var warpPlaneMaterialFar=  new THREE.MeshBasicMaterial( { color: 0xffffff, transparent: true } );
+    warpPlaneNear = new THREE.Mesh( warpPlane, warpPlaneMaterialNear );
+    warpPlaneNear.position.z = -0.11;
+    warpPlaneFar = new THREE.Mesh( warpPlane, warpPlaneMaterialFar );
+    warpPlaneFar.position.z = -100.;
+
+    WarpScene.add(warpPlaneNear)
+    WarpScene.add(warpPlaneFar)
+
+  }
+
+let phraseParties = new THREE.Group();
+phraseParties.name = "phrasesParties"
+
+
+function partieTexGen(phraseIndex){
+    var jokegeo =  new THREE.PlaneGeometry( 1., 1., 1 );
+    console.log("PHRASEINDEX"+phrases[phraseIndex]);
+    var tempGroup = new THREE.Group()
+    tempGroup.name = phrases[phraseIndex]+"parties";
+    phraseParties.add(tempGroup);
+    loader.load(
+     // resource URL
+     'assets/phrases/'+phrases[phraseIndex]+'.png',
+     // Function when resource is loaded
+     function ( texture ) {
+
+
+           var jokemat = new THREE.MeshBasicMaterial( {map: texture, color: 0xffffff, transparent: true } );
+           for ( var j = 0; j < 500; j ++ ) {
+               meshy = new THREE.Mesh( jokegeo, jokemat );
+               meshy.position.x = 1.7777778 * Math.random()-0.8888888889;
+                meshy.position.y = 1. * Math.random() - 0.5;
+                meshy.position.z = j/-50.;
+                meshy.rotation.z =-(Math.PI*2)/250*j;
+                meshy.scale.x = 0.25
+                meshy.scale.y=0.25;
+                tempGroup.add(meshy);
+                tempGroup.visible = false;
+
+             }
+     // partieTex[phrases[phraseIndex]] = texture
+      phraseIndex ++
+      if(phraseIndex<5){
+        partieTexGen(phraseIndex)
+      }else{
+        console.log(phraseParties);
+        WarpScene.add(phraseParties);
+      }
+     });
+
+  }
 
 
 
@@ -226,16 +322,16 @@ function load_a_group(i){
   geometry = new THREE.PlaneGeometry( 1, 1, 1 );
 
   var loadi = 0;
-  updateCurrentComic(i);
+
   imageLoad (groupNo, loadi);
 
-  counter = 0; ////SHOULDN'T BE HERE
+
   phraseCheck (currentComic, counter);
 
   tempGroup.visible = false;
   tempGroup.name = "comicGroup"+comicLoadingIndex;
-  // tempGroup.position.z = 0.25;
-  ComicScene.add( tempGroup );
+  tempGroup.position.z = 0.256;
+  TimeLineScene.add( tempGroup );
 
 }
 

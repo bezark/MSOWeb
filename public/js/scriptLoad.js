@@ -2,7 +2,7 @@
     var theComic = document.querySelector('comic');
 
     function getScript(pageId) {
-      console.log(pageId);
+
       var myRequest = new Request(pageId + '.txt');
 
       fetch(myRequest)
