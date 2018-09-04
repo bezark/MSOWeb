@@ -3,13 +3,14 @@ UIreq.open("GET","data/ui.json", false);
 UIreq.send(null);
 UIstructure = JSON.parse(UIreq.responseText);
 
-console.log(UIstructure);
+
 
 var buttonarray = [];
 var buttonCount = 0;
 let buttonGroup;
 
 let ui;
+let uiTex;
 function UILoad (){
   buttonGroup = new THREE.Group();
   TimeLineScene.add(buttonGroup);
@@ -18,11 +19,11 @@ function UILoad (){
   loader.load(
    // resource URL
 
-   "assets/ui/tempUI.png",
+   "assets/ui/UINormal.png",
    // Function when resource is loaded
    function ( texture ) {
 
-
+     uiTex = texture;
       var uiMaterial=  new THREE.MeshBasicMaterial( { map: texture, color: 0xffffff, transparent: true } );
        ui = new THREE.Mesh( uiGeo, uiMaterial );
       // ui.scale.set( 1.92, 1.08, 1 );
@@ -55,13 +56,13 @@ function UILoad (){
         buttonarray.push(button)
       }
     }
-      console.log(buttonarray);
+
       buttonLoad();
 
     }
 
 function buttonLoad(){
-    console.log(buttonarray);
+
     ;
       loader.load(
 
@@ -74,28 +75,30 @@ function buttonLoad(){
           var currButton = buttonarray[buttonCount]
           var buttonMaterial = new THREE.MeshBasicMaterial( { map: texture, color: 0xffffff, transparent: true } );
           var uiButton = new THREE.Mesh( uiGeo, buttonMaterial );
-          uiButton.scale.set( 0.07, 0.07, 1 );
+          uiButton.scale.set( 0.15, 0.15, 1 );
           uiButton.layer = -1;
           uiButton.name = currButton;
+          uiButton.unPressedTex = texture;
           uiButton.position.set( UIstructure[currButton].x, UIstructure[currButton].y, UIstructure[currButton].z);
 
-          console.log(uiButton.name);
-          console.log(uiButton.position); // center
+
+
           uiButton.trigger = window[UIstructure[currButton].event];
+          loader.load(
 
-          buttonGroup.add(uiButton);
+           // resource URL
 
-          buttonCount += 1;
-          if(buttonCount < buttonarray.length){buttonLoad()};
-              },
-              // Function called when download progresses
-              function ( xhr ) {
-                console.log( (xhr.loaded / xhr.total * 100) + '% loaded' );
-              },
-              // Function called when download errors
-              function ( xhr ) {
-                console.log( 'An error happened' );
-              }
+           "assets/ui/"+buttonarray[buttonCount]+"Pressed.png",
+           // Function when resource is loaded
+           function ( pressedtexture ) {
+             uiButton.pressedTexture = pressedtexture
+             buttonGroup.add(uiButton);
+             console.log("BUTTON LOADIN");
+             buttonCount += 1;
+             if(buttonCount < buttonarray.length){buttonLoad()};
+           });
+
+          }
         );
 
   }

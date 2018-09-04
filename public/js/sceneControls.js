@@ -17,29 +17,26 @@ function comicArrayLoad (){
   for (var i = 0; i < 21; i++) {
       possibleComics.push(i);
   }
-  console.log(possibleComics);
+
 }
 
 
 
 
 
-function phraseCheck(comic, frame){
+function phraseCheck(comic, frame){ ////add positioning
 
   for (var phrase in phraseStructure) {
 
-    if (phraseStructure[phrase].hasOwnProperty(comic)) {
+    if ((phraseStructure[phrase].hasOwnProperty(comic))&&(phraseStructure[phrase][comic].panel == frame)) {
+      phraseGroup.getObjectByName(phrase).visible = true;
+        phraseGroup.getObjectByName(phrase).scale.x = phraseStructure[phrase][comic].scale.x;
+        phraseGroup.getObjectByName(phrase).scale.y = phraseStructure[phrase][comic].scale.y;
+        phraseGroup.getObjectByName(phrase).position.x = phraseStructure[phrase][comic].pos.x
+        phraseGroup.getObjectByName(phrase).position.y = phraseStructure[phrase][comic].pos.y
 
-      if(phraseStructure[phrase][comic].panel == frame){
-          // console.log(frame, comic);
-          phraseGroup.getObjectByName(phrase).visible = true;
-          new TWEEN.Tween( phraseGroup.getObjectByName(phrase).position ).to( {
-            x: (0)}, 250 ).start()
-        }else{ /////PROBAVLY REDUNDANT
-          phraseGroup.getObjectByName(phrase).position.set( 1., 0., 0.21 )
-          phraseGroup.getObjectByName(phrase).visible = false;
-      }}else{
-        phraseGroup.getObjectByName(phrase).position.set( 1., 0., 0.21 )
+      }else{
+        phraseGroup.getObjectByName(phrase).position.set( 0., 0., 0.257 )
         phraseGroup.getObjectByName(phrase).visible = false;
 
     }
@@ -65,110 +62,82 @@ function frameAdvance(){
     new TWEEN.Tween( currentComicGroup.position ).to( {
       x: (counter*-1.05)}, 250 ).start()
 
-      new TWEEN.Tween( stars.position ).to( {
-        x: -(radius*0.5)-(counter*1.05)}, 250 ).start()
+
 
 }
 
 
 
 //////////TIME TRAVEL!!!////////
-
+var planeToChange, oldPlaneToChange;
 function time_travel(target, warpBool, button){
-  if (!warpBool){
-  button.visible = false;
-}
+  button.material.map = button.pressedTexture;
+  button.material.needsUpdate = true;
 
-        counter = 0;
-      phraseCheck (currentComic, counter);
+  counter = 0;
+  phraseCheck (currentComic, counter);
 
-      new TWEEN.Tween( currentComicGroup.position ).to( {
-        x: (counter*-1.05)}, 250 ).start()
-
-        new TWEEN.Tween( stars.position ).to( {
-          x: -(radius*0.5)-(counter*1.05)}, 250 ).start().onComplete(function(){
-
-            //// TEXUTRE SWAP
-            if (warpBool){
-              comicName = target;
-              circOffset = target;
-            }else{
-            circOffset = (circOffset+ target);
-            var comicName = circOffset%(possibleComics.length);
-            if (comicName<0){
-              comicName =21+comicName;
-              }
-            }
+  new TWEEN.Tween( currentComicGroup.position ).to( {
+  x: (counter*-1.05)}, 250 ).start().onComplete(function(){
 
 
-  console.log("circoffset:"+circOffset);
-  var oldPlaneToChange = timeline.getObjectByName("TimeLine"+currentComic)
+      circOffset = (circOffset+ target);
+      var comicName = circOffset%(possibleComics.length);
+      if (comicName<0){
+        comicName =21+comicName;
+        // }
+      }
 
-  if (spun){
-    oldPlaneToChange.material.opacity = 1.;
-    currentComicGroup.visible = false;
-  }
 
-  spun = 1;
+       oldPlaneToChange = timeline.getObjectByName("TimeLine"+currentComic)
 
-  updateCurrentComic(comicName);
-  console.log("currentComicGroup:");
-  console.log(currentComicGroup);
+
+        oldPlaneToChange.material.opacity = 1.;
+        currentComicGroup.visible = false;
+
+
+      updateCurrentComic(comicName);
 
 
 
+      planeToChange = timeline.getObjectByName("TimeLine"+comicName);
 
-  planeToChange = timeline.getObjectByName("TimeLine"+comicName);
+      oldTexture = planeToChange.material.map;
 
-  oldTexture = planeToChange.material.map;
+      phraseCheck (currentComic, 0);
 
-  phraseCheck (currentComic, 0);
+///// This might be where the loading error is
 
-
-
-  if (warpBool){
-    console.log("warprot");
-     timeline.rotation.z = theta*circOffset;
-  }else{
-    new TWEEN.Tween( timeline.rotation ).to( {
-      z: theta*circOffset}, 2000 ).easing(TWEEN.Easing.Bounce.Out).start().onComplete(function() {
-        button.visible = true;
-        currentComicGroup.visible = true;
-        planeToChange.material.opacity = 0;
-      });
-      new TWEEN.Tween( stars.rotation ).to( {
-        z: theta*circOffset}, 2000 ).easing(TWEEN.Easing.Bounce.Out).start().onComplete(function() {});
-    }
-        // comicGroup = load_a_group(i);
-        // scene.add( comicGroup );
-        // expand()
-
-
-
-
-
-
-
-
-
+      new TWEEN.Tween( timeline.rotation ).to( {
+        z: theta*circOffset}, 2000 ).easing(TWEEN.Easing.Bounce.Out).start().onComplete(function() {
+          button.material.map = button.unPressedTex;
+          button.material.needsUpdate = true;
+          currentComicGroup.visible = true;
+          planeToChange.material.opacity = 0;
+        });
+        new TWEEN.Tween( stars.rotation ).to( {
+          z: theta*circOffset}, 2000 ).easing(TWEEN.Easing.Bounce.Out).start().onComplete(function() {});
 
     });
-
-
-    // comicGroup = load_a_group(i);
-    // scene.add( comicGroup );
 
 
 }
 
 function time_warp(comic, frame){
-  console.log("warping to "+comic, frame);
-  // timeline.rotation.z = comic*theta;
+  timeline.getObjectByName("TimeLine"+currentComic).material.opacity = 1.;
+  currentComicGroup.position.x = 0;
+  currentComicGroup.visible = false;
+  console.log("warping");
+  updateCurrentComic(comic);
+
+  timeline.rotation.z = comic*theta;
   timeline.visible = true;
-  // circOffset = comic*theta;
-  time_travel(comic, true);
+  timeline.getObjectByName("TimeLine"+comic).material.opacity = 0;
+  circOffset = comic;
+  stars.rotation.z = theta*circOffset;
+  currentComicGroup.visible = true;
 
-
+ phraseCheck (currentComic, counter);
 
 
   counter = frame-1;
@@ -200,4 +169,5 @@ function LF(button){
 
 function WF(button){
   time_travel(3+(Math.ceil(Math.random()*2)),false, button);
+
 }

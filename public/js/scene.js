@@ -33,10 +33,10 @@ function init() {
   calcWH();
 
 
-  warpCamera = new THREE.PerspectiveCamera( 70, width / height, 0.01, 10 );
+  warpCamera = new THREE.PerspectiveCamera( 70, width / height, 0.01, 101 );
   warpCamera.position.z = 0.75;
 
-  timelineCamera = new THREE.PerspectiveCamera( 70, width / height, 0.01, 10 );
+  timelineCamera = new THREE.PerspectiveCamera( 70, width / height, 0.01, 1000 );
   timelineCamera.position.z = 1;
 
   TimeLineScene = new THREE.Scene();
@@ -58,7 +58,7 @@ function init() {
 
 	phraseSpriteGen();
 	TimeLineScene.add( phraseGroup );
-	phraseGroupsGen();
+	comicTexRefGen();
 
 
   loadAllComics()
@@ -141,7 +141,7 @@ function animate() {
 
     requestAnimationFrame( animate );
   	TWEEN.update();
-			controls.update();
+			// controls.update();
     render();
 
 }

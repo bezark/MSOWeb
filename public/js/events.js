@@ -8,13 +8,11 @@ let triggy;
 function tap(event){
    event.stopPropagation();
    event.preventDefault();
-  console.log("taped");
+
   onTouchMove(event);
   tapOrClick(event);
 }
-function test(){
-  console.log("test");
-}
+
 function triggerLoad(triggy, button){triggy(button)}
 
 function tapOrClick(event) {
@@ -23,7 +21,7 @@ function tapOrClick(event) {
 
   if(selectedObjects.length>0){
 
-    console.log(selectedObjects);
+
     if(selectedObjects[0].isPhrase){
         phraseHop(selectedObjects[0].name);
     }else{
