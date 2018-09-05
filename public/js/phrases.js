@@ -46,7 +46,7 @@ comicsToTraverse.length
     warpPlaneNear.position.z = -0.11;
     warpPlaneFar.rotation.z = 0.;
     warpPlaneNear.rotation.z = 0;
-
+  clearui.visible = true;
   var activeParties = phraseParties.getObjectByName(selectedPhrase+"parties")
   activeParties.visible = true
 
@@ -62,7 +62,7 @@ comicsToTraverse.length
       z: -(Math.PI*2)}, 2500 ).start().onComplete(function() {
         ui.material.map = uiTex;
         buttonGroup.visible = true;
-        // timeline.visible= true;
+        clearui.visible = false;
         activeParties.visible = false;
         activeParties.position.z = 0;
         activeParties.rotation.z = 0;

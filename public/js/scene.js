@@ -107,8 +107,8 @@ function onWindowResize() {
 
 
   renderer.setSize( width, height );
-	composer.setSize(width, height ); // width, height ); ????????
-	effectFXAA.uniforms['resolution'].value.set(1 / width, 1 / height );
+	// composer.setSize(width, height ); // width, height ); ????????
+	// effectFXAA.uniforms['resolution'].value.set(1 / width, 1 / height );
 
 }
 
