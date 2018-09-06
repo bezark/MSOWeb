@@ -12,10 +12,30 @@ let selectedObjects = [];
 
 let composer, effectFXAA, outlinePass;
 
+window.addEventListener("orientationchange", handleOrientation);
+
+let initted = false;
+function handleOrientation(){
+  window.setTimeout(function(){
+    if(!initted){  ;
+    if(window.innerHeight > window.innerWidth){
+
+        // alert("the orientation of the device is now "+screen.orientation.angle);
+       alert("Please rotate to landscape!");
+    }else{
+      init();
+      animate();
+      initted = true;
+    }}else{
+      onWindowResize()
+    }},250);
+
+}
 
 
-init();
-animate();
+
+handleOrientation();
+
 
 function calcWH(){
   height = window.innerHeight;//width *0.5625;
@@ -30,8 +50,7 @@ function calcWH(){
 }
 function init() {
 
-  calcWH();
-
+  calcWH()
 
   warpCamera = new THREE.PerspectiveCamera( 70, width / height, 0.01, 101 );
   warpCamera.position.z = 0.75;
@@ -85,7 +104,7 @@ var container = document.getElementById("theContainer");
 
 
   window.addEventListener( 'resize', onWindowResize, false );
-  window.addEventListener("orientationchange", handleOrientation, false);
+
 
   container.addEventListener("mouseup", tapOrClick, false);
   container.addEventListener("touchstart", tap, false);
@@ -96,16 +115,17 @@ var container = document.getElementById("theContainer");
 
 
 }  ////END O INIT
-calc = 0
+
 function onWindowResize() {
   calcWH();
-  calc ++
+
 
   timelineCamera.aspect = width / height;
+  warpCamera.aspect = width / height;
   timelineCamera.updateProjectionMatrix();
 
 
-
+  renderer.setPixelRatio( window.devicePixelRatio );
   renderer.setSize( width, height );
 	// composer.setSize(width, height ); // width, height ); ????????
 	// effectFXAA.uniforms['resolution'].value.set(1 / width, 1 / height );
@@ -114,15 +134,10 @@ function onWindowResize() {
 
 //
 
-function handleOrientation(event){
-  onWindowResize();
-
-}
 
 
-if(window.innerHeight > window.innerWidth){
-    alert("Please use Landscape!");
-}
+
+
 
 
 

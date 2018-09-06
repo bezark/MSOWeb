@@ -366,7 +366,7 @@ function imageLoad (groupNo, loadi){
        imageLoad (groupNo, loadi);
      }else{
        comicLoadingIndex ++;
-       if (comicLoadingIndex < 22) {
+       if (comicLoadingIndex < 21) {
          // console.log("LOADING GROUP"+comicLoadingIndex)
          load_a_group(comicLoadingIndex)
        }

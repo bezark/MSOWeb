@@ -117,9 +117,9 @@ function buttonLoad(){
         );
 
   }
-let blocker = document.getElementById( 'blocker' );
-let pauseScreen = document.getElementById( 'pauseScreen' );
-
+// let blocker = document.getElementById( 'blocker' );
+// let pauseScreen = document.getElementById( 'pauseScreen' );
+//
 function pauseLoad(){
   var geometry = new THREE.PlaneGeometry( 0.1, 0.1, 1 );
   var material = new THREE.MeshBasicMaterial( { opacity: 0., transparent: true} );
@@ -131,33 +131,33 @@ function pauseLoad(){
   pauseButton.position.y = 0.2;
   pauseButton.layer = 1;
   buttonGroup.add(pauseButton)
-	blocker.style.display = 'none';
+
 }
-function unpause(){
-  blocker.style.display = 'none';
-}
+// function unpause(){
+//   blocker.style.display = 'none';
+// }
 function pause(){
   console.log("PAUSED!");
-
-  blocker.style.display = '-webkit-box';
-  blocker.style.display = '-moz-box';
-  blocker.style.display = 'box';
-
-  pauseScreen.style.display = '';
+window.location.href = '../mso/about.html';
+  // blocker.style.display = '-webkit-box';
+  // blocker.style.display = '-moz-box';
+  // blocker.style.display = 'box';
+  //
+  // pauseScreen.style.display = '';
 }
-function about(){
-  var credits = document.getElementById('credits');
-  credits.style.display = "none"
-
-  var about = document.getElementById('about');
-  about.style.display = ""
-
-}
-about();
-function credits(){
-  var credits = document.getElementById('credits');
-  credits.style.display = ""
-  var about = document.getElementById('about');
-  about.style.display = "none"
-
-}
+// function about(){
+//   var credits = document.getElementById('credits');
+//   credits.style.display = "none"
+//
+//   var about = document.getElementById('about');
+//   about.style.display = ""
+//
+// }
+// // about();
+// function credits(){
+//   var credits = document.getElementById('credits');
+//   credits.style.display = ""
+//   var about = document.getElementById('about');
+//   about.style.display = "none"
+//
+// }
