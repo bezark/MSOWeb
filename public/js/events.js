@@ -2,23 +2,46 @@
 var clicks = 0;
 let triggy;
 
-
-
-
-function tap(event){
-   event.stopPropagation();
-   event.preventDefault();
+function loadHammertime(){
+  var hammertime = new Hammer(container);
+  hammertime.on('swipe', function(ev) {
+  	swipes(ev);
+  });
+  hammertime.get('swipe').set({ direction: Hammer.DIRECTION_ALL });
+  hammertime.on('tap',function(event){
+  console.log(event);
+  // event.stopPropagation();
+  // event.preventDefault();
 
   onTouchMove(event);
   tapOrClick(event);
+  });
 }
 
+function tap(event){
+}
+function swipes(event){
+  switch(event.direction){
+  case 2:
+    frameAdvance(true);
+  break;
+  case 4:
+    frameAdvance(false)
+  break;
+  case 16:
+   WB(buttonGroup.getObjectByName("WB"))
+   break;
+   case 8:
+   WF(buttonGroup.getObjectByName("WF"))
+  }
+
+}
 function triggerLoad(triggy, button){triggy(button)}
 
 function tapOrClick(event) {
-  event.stopPropagation();
-  event.preventDefault();
-
+  // event.stopPropagation();
+  // event.preventDefault();
+  console.log(event);
   if(selectedObjects.length>0){
 
 
@@ -32,7 +55,7 @@ function tapOrClick(event) {
     ///FIGURe out phrase hop raycast
 
     // phraseGroup.getObjectByName(selectedObjects[0].name).visible = false
-  }else{  frameAdvance()}
+  }else{  frameAdvance(true)}
 
 
  }
@@ -42,18 +65,19 @@ function tapOrClick(event) {
 function onTouchMove( event ) {
 
    var x, y;
-
-   if ( event.changedTouches ) {
-
-     x = event.changedTouches[ 0 ].pageX;
-     y = event.changedTouches[ 0 ].pageY;
-
-   } else {
-
-     x = event.clientX;
-     y = event.clientY;
-
-   }
+   x = event.center.x;
+   y = event.center.y;
+   // if ( event.changedTouches ) {
+   //
+   //   x = event.changedTouches[ 0 ].pageX;
+   //   y = event.changedTouches[ 0 ].pageY;
+   //
+   // } else {
+   //
+   //   x = event.clientX;
+   //   y = event.clientY;
+   //
+   // }
 
     mouse.x = ((x-(window.innerWidth-width)*0.5)/width)* 2 - 1; //
     mouse.y = - ( y/height ) * 2 + 1;

@@ -49,13 +49,19 @@ function updateCurrentComic (update){
 
 }
 
-function frameAdvance(){
+function frameAdvance(forward){
 
-  precounter = counter;
+if(forward){
   counter ++;
   if (counter>=4) {
       counter = 0;
   }
+}else{
+  counter --;
+  if (counter<=-1) {
+      counter = 3;
+  }
+}
     phraseCheck (currentComic, counter);
 
 
@@ -142,7 +148,7 @@ function time_warp(comic, frame){
 
   counter = frame-1;
 
-  frameAdvance();
+  frameAdvance(true);
   currentComicGroup.position.x = frame*1.05;
 }
 

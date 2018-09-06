@@ -7,6 +7,8 @@ let comicGroup, timeline, phraseGroup;
 
 let raycaster = new THREE.Raycaster();
 
+let container;
+
 let mouse = new THREE.Vector2();
 let selectedObjects = [];
 
@@ -98,7 +100,7 @@ function init() {
 
 	// postInit();
 
-var container = document.getElementById("theContainer");
+ container = document.getElementById("theContainer");
 
   container.appendChild( renderer.domElement );
 
@@ -106,12 +108,12 @@ var container = document.getElementById("theContainer");
   window.addEventListener( 'resize', onWindowResize, false );
 
 
-  container.addEventListener("mouseup", tapOrClick, false);
-  container.addEventListener("touchstart", tap, false);
-
-	container.addEventListener( 'mousemove', onTouchMove );
+  // container.addEventListener("mouseup", tapOrClick, false);
+  // container.addEventListener("touchend", tap, false);
+  //
+	// container.addEventListener( 'mousemove', onTouchMove );
   container.addEventListener( 'touchmove', onTouchMove );
-
+  loadHammertime();
 
 
 }  ////END O INIT
